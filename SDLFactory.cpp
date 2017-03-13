@@ -1,5 +1,6 @@
 #include "SDLFactory.h"
 #include "SDLPlayerShip.h"
+#include "SDLPlayerRocket.h"
 #include <iostream>
 
 using namespace std;
@@ -34,6 +35,9 @@ Event SDLFactory::getEvent()
                 case SDLK_RIGHT :
                     e = Right;
                     break;
+                case SDLK_SPACE :
+                    e = Shoot;
+                    break;
                 default :
                     break;
             }
@@ -56,23 +60,33 @@ void SDLFactory::renderPresent()
     SDL_RenderPresent(renderer);
 }
 
-PlayerShip* SDLFactory::getPlayerShip()
-{
-    SDL_Rect rect;
-    rect.x = 375;
-    rect.y = 525;
-    rect.w = 75;
-    rect.h = 75;
-
-    SDLPlayerShip* playerShip = new SDLPlayerShip(renderer,rect.x,rect.y,rect.w,rect.h);
-
-    return playerShip;
-}
-
 SDLFactory::~SDLFactory()
 {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(texture);
     SDL_Quit();
+}
+
+Entity* SDLFactory::getPlayerShip()
+{
+    SDL_Rect rect;
+    rect.x = 340;
+    rect.y = 520;
+    rect.w = 80;
+    rect.h = 80;
+
+    return new SDLPlayerShip(renderer,rect.x,rect.y,rect.w,rect.h);
+}
+
+Entity* SDLFactory::getPlayerRocket(int x, int y)
+{
+    SDL_Rect rect;
+    rect.x = x-1;
+    rect.y = y;
+    rect.w = 3;
+    rect.h = 13;
+    cout << x << " " << y << endl;
+
+    return new SDLPlayerRocket(renderer,rect.x,rect.y,rect.w,rect.h);
 }

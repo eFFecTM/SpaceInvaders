@@ -15,5 +15,4 @@ private:
     SDL_Renderer* renderer = NULL;
 };
 
-
 #endif //SPACEINVADERS_SDLPLAYERSHIP_H

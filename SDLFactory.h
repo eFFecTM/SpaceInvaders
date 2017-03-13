@@ -8,7 +8,8 @@ class SDLFactory : public AbstractFactory
 {
 public:
     virtual ~SDLFactory();
-    PlayerShip* getPlayerShip();
+    Entity* getPlayerShip();
+    Entity* getPlayerRocket(int,int);
     void init();
     Event getEvent();
     void renderBackground();
@@ -19,6 +20,5 @@ private:
     SDL_Surface* surface = NULL;
     SDL_Texture* texture = NULL;
 };
-
 
 #endif //SPACEINVADERS_SDLFACTORY_H

@@ -3,7 +3,7 @@
 SDLPlayerShip::SDLPlayerShip(SDL_Renderer* renderer, int x, int y, int width, int height) : PlayerShip(x, y, width, height)
 {
     this->renderer = renderer;
-    surface = SDL_LoadBMP("resources/SpaceShip2.bmp");
+    surface = SDL_LoadBMP("resources/SpaceShip.bmp");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 }
