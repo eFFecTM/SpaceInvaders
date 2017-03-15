@@ -18,7 +18,7 @@ private:
     AbstractFactory *af;
     PlayerShip *playerShip;
     bool running = true;
-    vector<Entity*> entities;
+    vector<Entity*> enemies;
     vector<Entity*> rockets;
 
 };

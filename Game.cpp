@@ -10,7 +10,6 @@ void Game::start()
 {
     af->init();
     playerShip = af->getPlayerShip();
-    //entities.push_back(playerShip);
     Event e;
 
     while(running)
@@ -20,11 +19,10 @@ void Game::start()
         movePlayerRockets();
         af->renderBackground();
         playerShip->render();
-        //cout << entities.size() << endl;
-        /*for(Entity* entity : entities)
+        for(Entity* enemy : enemies)
         {
-            entity->render();
-        }*/
+            enemy->render();
+        }
         for(Entity* rocket : rockets)
         {
             rocket->render();
@@ -71,29 +69,9 @@ void Game::movePlayerRockets()
 {
     for(unsigned int i=0; i<rockets.size(); i++)
     {
-        //cout << *rockets.at(i)->getX() << endl;
-        //cout << *rockets.at(i)->getY() << endl;
         if(*rockets.at(i)->getY() > 0)
-        {
             rockets.at(i)->setY(*rockets.at(i)->getY() - 1);
-        }
         else
-        {
             rockets.erase(rockets.begin() + i);
-        }
-
-//        cout << *rockets.at(i)->getX() << endl;
-//        if(PlayerRocket* rocket = dynamic_cast<PlayerRocket*>(entities.at(i))) // old was safely casted to NewType
-//        {
-//            cout << rocket->getX() << endl;
-//            if(*rocket->getY() > 200)
-//            {
-//                rocket->setY(*rocket->getY() - 1);
-//            }
-//            else
-//            {
-//                entities.erase(entities.begin() + i);
-//            }
-//        }
     }
 }
