@@ -16,7 +16,7 @@ public:
 
 private:
     AbstractFactory *af;
-    Entity *playerShip;
+    PlayerShip *playerShip;
     bool running = true;
     vector<Entity*> entities;
     vector<Entity*> rockets;

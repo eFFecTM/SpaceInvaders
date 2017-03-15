@@ -4,7 +4,7 @@
 class Entity
 {
 public:
-    Entity(int,int,int,int);
+    Entity();
     int* getX();
     int* getY();
     int* getWidth();

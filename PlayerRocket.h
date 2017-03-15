@@ -6,7 +6,7 @@
 class PlayerRocket : public Player
 {
 public:
-    PlayerRocket(int x,int y,int width,int height) : Player(x,y,width,height) {}
+    PlayerRocket() {}
 };
 
 #endif //SPACEINVADERS_PLAYERROCKET_H

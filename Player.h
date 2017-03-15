@@ -6,7 +6,7 @@
 class Player : public Entity
 {
 public:
-    Player(int x, int y, int width, int height) : Entity(x,y,width,height) {}
+    Player(){};
 };
 
 #endif //SPACEINVADERS_PLAYER_H

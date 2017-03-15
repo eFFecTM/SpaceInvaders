@@ -10,7 +10,7 @@ void Game::start()
 {
     af->init();
     playerShip = af->getPlayerShip();
-    entities.push_back(playerShip);
+    //entities.push_back(playerShip);
     Event e;
 
     while(running)
@@ -19,11 +19,12 @@ void Game::start()
         running = handleEvent(e);
         movePlayerRockets();
         af->renderBackground();
+        playerShip->render();
         //cout << entities.size() << endl;
-        for(Entity* entity : entities)
+        /*for(Entity* entity : entities)
         {
             entity->render();
-        }
+        }*/
         for(Entity* rocket : rockets)
         {
             rocket->render();
@@ -55,10 +56,8 @@ bool Game::handleEvent(Event e)
             }
             break;
         case Shoot:
-            //cout << "SHOOT!" << endl;
-            x = *playerShip->getX()+(*playerShip->getWidth())/2;
+            x = *playerShip->getX()+ *playerShip->getWidth()/2;
             y = *playerShip->getY();
-            //cout << x << " - " << y << endl;
             rockets.push_back(af->getPlayerRocket(x,y));
             break;
         default:
