@@ -4,7 +4,7 @@ SDLPlayerRocket::SDLPlayerRocket(int* windowWidth, int* windowHeight, SDL_Render
 {
     this->windowWidth = windowWidth;
     this->windowHeight = windowHeight;
-    surface = SDL_LoadBMP("resources/PlayerRocket.bmp");
+    surface = SDL_LoadBMP("resources/PlayerRocket.bmpx");
     SDL_GetClipRect(surface, &rect);
     this->width = rect.w*4;
     this->height = rect.h*4;
@@ -13,6 +13,11 @@ SDLPlayerRocket::SDLPlayerRocket(int* windowWidth, int* windowHeight, SDL_Render
     this->renderer = renderer;
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
+}
+
+SDLPlayerRocket::~SDLPlayerRocket()
+{
+    std::cout << "Deleting PlayerRocket" << std::endl;
 }
 
 void SDLPlayerRocket::render()

@@ -1,26 +1,29 @@
-#include "SDLPlayerShip.h"
+#include "SDLEnemy.h"
 
-SDLPlayerShip::SDLPlayerShip(int* windowWidth, int* windowHeight, SDL_Renderer* renderer, int x, int y)
+SDLEnemy::SDLEnemy(int* windowWidth, int* windowHeight, SDL_Renderer* renderer, int x, int y, int type)
 {
     this->windowWidth = windowWidth;
     this->windowHeight = windowHeight;
-    surface = SDL_LoadBMP("resources/SpaceShip.bmpx");
+    std::stringstream ss;
+    ss << "resources/Enemy" << type << ".bmpx";
+    surface = SDL_LoadBMP(ss.str().c_str());
     SDL_GetClipRect(surface, &rect);
     this->width = rect.w*4;
     this->height = rect.h*4;
     this->x = x-width/2;
-    this->y = y-height;
+    this->y = y-height/2;
     this->renderer = renderer;
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
+    this->type = type;
 }
 
-SDLPlayerShip::~SDLPlayerShip()
+SDLEnemy::~SDLEnemy()
 {
-    std::cout << "Deleting PlayerShip" << std::endl;
+    std::cout << "Deleting Enemy" << std::endl;
 }
 
-void SDLPlayerShip::render()
+void SDLEnemy::render()
 {
     SDL_Rect rect;
     rect.x = x * *windowWidth/800;

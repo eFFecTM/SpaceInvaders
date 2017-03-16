@@ -8,6 +8,7 @@ class SDLPlayerShip : public PlayerShip
 {
 public:
     SDLPlayerShip(int*,int*,SDL_Renderer*,int,int);
+    virtual ~SDLPlayerShip();
     void render();
 private:
     int *windowWidth, *windowHeight;

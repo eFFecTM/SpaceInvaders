@@ -13,14 +13,18 @@ public:
     void start();
     bool handleEvent(Event);
     void movePlayerRockets();
+    void moveEnemies();
+    void collisionDetection();
+    bool hasIntersection(Entity*,Entity*);
 
 private:
     AbstractFactory *af;
     PlayerShip *playerShip;
     bool running = true;
-    vector<Entity*> enemies;
     vector<Entity*> rockets;
-
+    vector<Entity*> enemies;
+    int ls,rs,us,bs;
+    bool right = true;
 };
 
 

@@ -1,6 +1,8 @@
 #ifndef SPACEINVADERS_ENTITY_H
 #define SPACEINVADERS_ENTITY_H
 
+#include <iostream>
+
 class Entity
 {
 public:
@@ -14,6 +16,7 @@ public:
     void setWidth(int);
     void setHeight(int);
     virtual void render() = 0;
+    virtual ~Entity(){}
 protected:
     int x, y, width, height;
 };

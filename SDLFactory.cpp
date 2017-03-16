@@ -1,16 +1,14 @@
 #include "SDLFactory.h"
 #include "SDLPlayerShip.h"
 #include "SDLPlayerRocket.h"
-#include <iostream>
-
-using namespace std;
+#include "SDLEnemy.h"
 
 void SDLFactory::init()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     window = SDL_CreateWindow("Space Invaders", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    surface = SDL_LoadBMP("resources/Background.bmp");
+    surface = SDL_LoadBMP("resources/Background.bmpx");
     SDL_GetClipRect(surface, &rect);
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
@@ -92,5 +90,13 @@ PlayerRocket* SDLFactory::getPlayerRocket(int x, int y)
     rect.x = x;
     rect.y = y;
     return new SDLPlayerRocket(&windowWidth,&windowHeight,renderer,rect.x,rect.y);
+}
+
+Enemy* SDLFactory::getEnemy(int x, int y, int type)
+{
+    SDL_Rect rect;
+    rect.x = x;
+    rect.y = y;
+    return new SDLEnemy(&windowWidth,&windowHeight,renderer,rect.x,rect.y,type);
 }
 

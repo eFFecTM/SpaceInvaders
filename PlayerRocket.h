@@ -6,7 +6,8 @@
 class PlayerRocket : public Player
 {
 public:
-    PlayerRocket() {}
+    PlayerRocket(){}
+    virtual ~PlayerRocket(){}
 };
 
 #endif //SPACEINVADERS_PLAYERROCKET_H

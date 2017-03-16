@@ -7,6 +7,7 @@ class Player : public Entity
 {
 public:
     Player(){};
+    virtual ~Player(){}
 };
 
 #endif //SPACEINVADERS_PLAYER_H

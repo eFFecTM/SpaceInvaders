@@ -10,6 +10,7 @@ public:
     virtual ~SDLFactory();
     PlayerShip* getPlayerShip();
     PlayerRocket* getPlayerRocket(int,int);
+    Enemy* getEnemy(int,int,int);
     void init();
     Event getEvent();
     void renderBackground();

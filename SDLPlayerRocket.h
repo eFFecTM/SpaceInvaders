@@ -8,6 +8,7 @@ class SDLPlayerRocket : public PlayerRocket
 {
 public:
     SDLPlayerRocket(int*,int*,SDL_Renderer*,int,int);
+    virtual ~SDLPlayerRocket();
     void render();
 private:
     int *windowWidth, *windowHeight;
@@ -16,6 +17,5 @@ private:
     SDL_Renderer* renderer = NULL;
     SDL_Rect rect;
 };
-
 
 #endif //SPACEINVADERS_SDLPLAYERROCKET_H
