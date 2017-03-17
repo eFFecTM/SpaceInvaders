@@ -3,12 +3,15 @@
 
 #include "Rocket.h"
 #include <SDL.h>
+#include <sstream>
+#include <string>
 
 class SDLRocket : public Rocket
 {
 public:
-    SDLRocket(int*,int*,SDL_Renderer*,int,int);
+    SDLRocket(int*,int*,SDL_Renderer*,int,int,int);
     virtual ~SDLRocket();
+    int* getType();
     void render();
 private:
     int *windowWidth, *windowHeight;

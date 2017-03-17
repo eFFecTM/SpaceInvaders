@@ -9,7 +9,6 @@
 #include <SDL.h>
 #include <sstream>
 #include <string>
-#include <iostream>
 
 class SDLEnemy : public Enemy
 {

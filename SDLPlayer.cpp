@@ -6,8 +6,8 @@ SDLPlayer::SDLPlayer(int* windowWidth, int* windowHeight, SDL_Renderer* renderer
     this->windowHeight = windowHeight;
     surface = SDL_LoadBMP("resources/SpaceShip.bmpx");
     SDL_GetClipRect(surface, &rect);
-    this->width = rect.w*4;
-    this->height = rect.h*4;
+    this->width = rect.w*3;
+    this->height = rect.h*3;
     this->x = x-width/2;
     this->y = y-height;
     this->renderer = renderer;

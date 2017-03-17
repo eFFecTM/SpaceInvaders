@@ -8,8 +8,8 @@ SDLEnemy::SDLEnemy(int* windowWidth, int* windowHeight, SDL_Renderer* renderer, 
     ss << "resources/Enemy" << type << ".bmpx";
     surface = SDL_LoadBMP(ss.str().c_str());
     SDL_GetClipRect(surface, &rect);
-    this->width = rect.w*4;
-    this->height = rect.h*4;
+    this->width = rect.w*3;
+    this->height = rect.h*3;
     this->x = x-width/2;
     this->y = y-height/2;
     this->renderer = renderer;

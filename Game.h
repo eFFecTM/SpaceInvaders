@@ -2,6 +2,8 @@
 #define SPACEINVADERS_GAME_H
 
 #include <vector>
+#include <stdlib.h>
+#include <time.h>
 #include "AbstractFactory.h"
 
 using namespace std;
@@ -15,6 +17,7 @@ public:
     void moveRockets();
     void moveEnemies();
     void shootEnemies();
+    void addScore(int);
     void collisionDetection();
     bool hasIntersection(Entity*,Entity*);
 
@@ -22,8 +25,9 @@ private:
     AbstractFactory *af;
     Player *player;
     bool running = true;
-    vector<Entity*> rockets;
-    vector<Entity*> enemies;
+    vector<Rocket*> playerRockets;
+    vector<Rocket*> enemyRockets;
+    vector<Enemy*> enemies;
     int ls,rs,us,bs;
     bool right = true;
 };

@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Game.h"
 
 Game::Game(AbstractFactory* af)
@@ -8,18 +7,17 @@ Game::Game(AbstractFactory* af)
 
 void Game::start()
 {
-    af->init();
     player = af->getPlayer();
-    ls = 50; // left side border
-    rs = 700; // right side border
+    ls = 32; // left side border
+    rs = 748; // right side border
     us = 25; // up side border
     bs = 600-*player->getHeight(); // bottom side border
-    for(unsigned int i=0; i<8; i++)
+    for(unsigned int i=0; i<10; i++)
     {
-        enemies.push_back(af->getEnemy(ls+80*i,us,1));
-        enemies.push_back(af->getEnemy(ls+80*i,us+60,2));
-        enemies.push_back(af->getEnemy(ls+80*i,us+2*60,3));
-        enemies.push_back(af->getEnemy(ls+80*i,us+3*60,4));
+        enemies.push_back(af->getEnemy(ls+60*i,us,1));
+        enemies.push_back(af->getEnemy(ls+60*i,us+50,2));
+        enemies.push_back(af->getEnemy(ls+60*i,us+2*50,3));
+        enemies.push_back(af->getEnemy(ls+60*i,us+3*50,4));
     }
 
     Event e;
@@ -30,8 +28,8 @@ void Game::start()
         running = handleEvent(e);
         if(i == 125)
         {
-            moveEnemies();
             shootEnemies();
+            moveEnemies();
             i = 0;
         }
         i++;
@@ -40,14 +38,12 @@ void Game::start()
         af->renderBackground();
         player->render();
 
-        for(Entity* enemy : enemies)
-        {
+        for(Enemy* enemy : enemies)
             enemy->render();
-        }
-        for(Entity* rocket : rockets)
-        {
+        for(Rocket* rocket : playerRockets)
             rocket->render();
-        }
+        for(Rocket* rocket : enemyRockets)
+            rocket->render();
         af->renderPresent();
     }
 }
@@ -64,44 +60,51 @@ bool Game::handleEvent(Event e)
             break;
         case Left:
             if (*player->getX() > 0)
-            {
                 player->setX(*player->getX() - 3);
-            }
             break;
         case Right:
             if (*player->getX() < 720)
-            {
                 player->setX(*player->getX() + 3);
-            }
             break;
         case Shoot:
-            cout << rockets.size() << endl;
-            if(rockets.size() < 5) // Max 5 rockets in existence
+            cout << playerRockets.size() << endl;
+            if(playerRockets.size() < 5) // Max 5 playerRockets in existence
             {
                 x = *player->getX()+ *player->getWidth()/2;
                 y = *player->getY();
-                rockets.push_back(af->getRocket(x,y));
+                playerRockets.push_back(af->getRocket(x,y,1));
             }
             break;
         default:
             break;
     }
-
     return running;
 }
 
 void Game::moveRockets()
 {
-    Entity* playerRocket;
-    for(unsigned int i=0; i<rockets.size(); i++)
+    Rocket* rocket;
+    for(unsigned int i=0; i<playerRockets.size(); i++)
     {
-        playerRocket = rockets.at(i);
-        if(*playerRocket->getY() > -*playerRocket->getHeight())
-            playerRocket->setY(*playerRocket->getY() - 1);
+        rocket = playerRockets.at(i);
+        if (*rocket->getY() > -*rocket->getHeight())
+            rocket->setY(*rocket->getY() - 1);
         else
         {
-            delete playerRocket;
-            rockets.erase(rockets.begin() + i);
+            delete rocket;
+            playerRockets.erase(playerRockets.begin() + i);
+        }
+    }
+
+    for(unsigned int i=0; i<enemyRockets.size(); i++)
+    {
+        rocket = enemyRockets.at(i);
+        if(*rocket->getY() < 600)
+            rocket->setY(*rocket->getY() + 1);
+        else
+        {
+            delete rocket;
+            enemyRockets.erase(enemyRockets.begin() + i);
         }
     }
 }
@@ -110,15 +113,15 @@ void Game::moveEnemies()
 {
     bool isMovingDown = false;
 
-    for(Entity* enemy : enemies)
+    for(Enemy* enemy : enemies)
     {
-        if(right && *enemy->getX() >= rs)
+        if(right && *enemy->getX() > rs)
         {
             isMovingDown = true;
             right = false;
             break;
         }
-        else if(!right && *enemy->getX() <= ls)
+        else if(!right && *enemy->getX() < ls)
         {
             isMovingDown = true;
             right = true;
@@ -128,14 +131,14 @@ void Game::moveEnemies()
 
     if(isMovingDown)
     {
-        for(Entity* enemy : enemies)
+        for(Enemy* enemy : enemies)
         {
             enemy->setY(*enemy->getY()+60);
         }
     }
     else
     {
-        for(Entity* enemy : enemies)
+        for(Enemy* enemy : enemies)
         {
             if (right)
             {
@@ -151,7 +154,17 @@ void Game::moveEnemies()
 
 void Game::shootEnemies()
 {
+    int size = enemies.size();
+    srand((unsigned int) time(0));
+    int r = rand() % size; // 0 tot en met 31
+    Enemy* enemy = enemies.at((unsigned int) r);
+    int x = *enemy->getX();
+    int y = *enemy->getY();
+    enemyRockets.push_back(af->getRocket(x,y,2));
+}
 
+void Game::addScore(int)
+{
 
 }
 
@@ -159,19 +172,31 @@ void Game::collisionDetection()
 {
     for(unsigned int i=0;i<enemies.size();i++)
     {
-        for(unsigned int j=0;j<rockets.size();j++)
+        for(unsigned int j=0;j<playerRockets.size();j++)
         {
-            Entity* enemy = enemies.at(i);
-            Entity* rocket = rockets.at(j);
+            Enemy* enemy = enemies.at(i);
+            Rocket* rocket = playerRockets.at(j);
+
             if(hasIntersection(enemy,rocket))
             {
                 delete enemy;
                 enemies.erase(enemies.begin() + i);
                 delete rocket;
-                rockets.erase(rockets.begin() + j);
+                playerRockets.erase(playerRockets.begin() + j);
                 break;
             }
+        }
+    }
 
+    for(unsigned int i=0;i<enemyRockets.size();i++)
+    {
+        Rocket* rocket = enemyRockets.at(i);
+
+        if(hasIntersection(player,rocket))
+        {
+            delete rocket;
+            enemyRockets.erase(enemyRockets.begin() + i);
+            break;
         }
     }
 }
@@ -209,4 +234,3 @@ bool Game::hasIntersection(Entity* A, Entity* B)
 
     return true;
 }
-
