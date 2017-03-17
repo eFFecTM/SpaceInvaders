@@ -14,15 +14,8 @@ SDLFactory::SDLFactory()
     SDL_GetClipRect(surface, &backgroundRect);
     backGroundTexture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
-
-    std::stringstream ss;
-    int score = 666;
-    ss << "Score: " << score;
-    font = TTF_OpenFont("resources/Terminal_Bold.fon",72);
-    surface = TTF_RenderText_Solid(font, ss.str().c_str(),{255,255,255});
-    SDL_GetClipRect(surface, &textRect);
-    textTexture = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
+    font = TTF_OpenFont("resources/impact.ttf",48);
+    renderScore(0);
 }
 
 Event SDLFactory::getEvent()
@@ -70,9 +63,21 @@ void SDLFactory::renderBackground()
     SDL_RenderClear(renderer);
     SDL_Rect r = {backgroundRect.x,backgroundRect.y,windowWidth,windowHeight};
     SDL_RenderCopy(renderer, backGroundTexture, NULL, &r);
-    r = {textRect.x,textRect.y,textRect.w*4,textRect.h*4};
-    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
 }
+
+void SDLFactory::renderScore(int score)
+{
+    std::stringstream ss;
+    ss << "Score: " << score;
+    surface = TTF_RenderText_Solid(font, ss.str().c_str(),{255,255,255});
+    SDL_GetClipRect(surface, &textRect);
+    textTexture = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+    SDL_Rect r = {0,600-textRect.h,textRect.w,textRect.h};
+    SDL_RenderCopy(renderer, textTexture, NULL, &r);
+}
+
 
 void SDLFactory::renderPresent()
 {

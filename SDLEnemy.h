@@ -15,6 +15,7 @@ class SDLEnemy : public Enemy
 public:
     SDLEnemy(int*,int*,SDL_Renderer*,int,int,int);
     virtual ~SDLEnemy();
+    int* getType();
     void render();
 private:
     int *windowWidth, *windowHeight;

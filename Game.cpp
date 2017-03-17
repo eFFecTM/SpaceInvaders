@@ -36,6 +36,7 @@ void Game::start()
         moveRockets();
         collisionDetection();
         af->renderBackground();
+        af->renderScore(score);
         player->render();
 
         for(Enemy* enemy : enemies)
@@ -163,11 +164,6 @@ void Game::shootEnemies()
     enemyRockets.push_back(af->getRocket(x,y,2));
 }
 
-void Game::addScore(int)
-{
-
-}
-
 void Game::collisionDetection()
 {
     for(unsigned int i=0;i<enemies.size();i++)
@@ -179,6 +175,25 @@ void Game::collisionDetection()
 
             if(hasIntersection(enemy,rocket))
             {
+                int type = *enemy->getType();
+                switch(type)
+                {
+                    case 1:
+                        score += 10;
+                        break;
+                    case 2:
+                        score += 20;
+                        break;
+                    case 3:
+                        score += 30;
+                        break;
+                    case 4:
+                        score += 50;
+                        break;
+                    default:
+                        break;
+                }
+
                 delete enemy;
                 enemies.erase(enemies.begin() + i);
                 delete rocket;

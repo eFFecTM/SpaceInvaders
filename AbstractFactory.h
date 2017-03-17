@@ -15,6 +15,7 @@ public:
     virtual Enemy* getEnemy(int,int,int) = 0;
     virtual Event getEvent() = 0;
     virtual void renderBackground() = 0;
+    virtual void renderScore(int) = 0;
     virtual void renderPresent() = 0;
 };
 

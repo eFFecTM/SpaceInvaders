@@ -23,6 +23,11 @@ SDLEnemy::~SDLEnemy()
     std::cout << "Deleting Enemy" << std::endl;
 }
 
+int* SDLEnemy::getType()
+{
+    return &type;
+}
+
 void SDLEnemy::render()
 {
     SDL_Rect rect;

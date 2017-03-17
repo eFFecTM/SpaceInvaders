@@ -17,7 +17,6 @@ public:
     void moveRockets();
     void moveEnemies();
     void shootEnemies();
-    void addScore(int);
     void collisionDetection();
     bool hasIntersection(Entity*,Entity*);
 
@@ -30,6 +29,7 @@ private:
     vector<Enemy*> enemies;
     int ls,rs,us,bs;
     bool right = true;
+    int score = 0;
 };
 
 

@@ -8,6 +8,7 @@ class Enemy : public Entity
 public:
     Enemy(){}
     virtual ~Enemy(){}
+    virtual int* getType() = 0;
 protected:
     int type;
 };

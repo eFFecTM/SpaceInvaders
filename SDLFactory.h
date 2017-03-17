@@ -15,6 +15,7 @@ public:
     Enemy* getEnemy(int,int,int);
     Event getEvent();
     void renderBackground();
+    void renderScore(int);
     void renderPresent();
 private:
     SDL_Window* window = NULL; // Good practice
