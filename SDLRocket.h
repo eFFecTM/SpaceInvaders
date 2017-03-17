@@ -1,14 +1,14 @@
 #ifndef SPACEINVADERS_SDLPLAYERROCKET_H
 #define SPACEINVADERS_SDLPLAYERROCKET_H
 
-#include "PlayerRocket.h"
+#include "Rocket.h"
 #include <SDL.h>
 
-class SDLPlayerRocket : public PlayerRocket
+class SDLRocket : public Rocket
 {
 public:
-    SDLPlayerRocket(int*,int*,SDL_Renderer*,int,int);
-    virtual ~SDLPlayerRocket();
+    SDLRocket(int*,int*,SDL_Renderer*,int,int);
+    virtual ~SDLRocket();
     void render();
 private:
     int *windowWidth, *windowHeight;

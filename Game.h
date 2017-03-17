@@ -12,14 +12,15 @@ public:
     Game(AbstractFactory*);
     void start();
     bool handleEvent(Event);
-    void movePlayerRockets();
+    void moveRockets();
     void moveEnemies();
+    void shootEnemies();
     void collisionDetection();
     bool hasIntersection(Entity*,Entity*);
 
 private:
     AbstractFactory *af;
-    PlayerShip *playerShip;
+    Player *player;
     bool running = true;
     vector<Entity*> rockets;
     vector<Entity*> enemies;

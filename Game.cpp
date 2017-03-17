@@ -9,11 +9,11 @@ Game::Game(AbstractFactory* af)
 void Game::start()
 {
     af->init();
-    playerShip = af->getPlayerShip();
+    player = af->getPlayer();
     ls = 50; // left side border
     rs = 700; // right side border
     us = 25; // up side border
-    bs = 600-*playerShip->getHeight(); // bottom side border
+    bs = 600-*player->getHeight(); // bottom side border
     for(unsigned int i=0; i<8; i++)
     {
         enemies.push_back(af->getEnemy(ls+80*i,us,1));
@@ -28,16 +28,17 @@ void Game::start()
     {
         e = af->getEvent();
         running = handleEvent(e);
-        if(i == 250)
+        if(i == 125)
         {
             moveEnemies();
+            shootEnemies();
             i = 0;
         }
         i++;
-        movePlayerRockets();
+        moveRockets();
         collisionDetection();
         af->renderBackground();
-        playerShip->render();
+        player->render();
 
         for(Entity* enemy : enemies)
         {
@@ -62,24 +63,24 @@ bool Game::handleEvent(Event e)
             running = false;
             break;
         case Left:
-            if (*playerShip->getX() > 0)
+            if (*player->getX() > 0)
             {
-                playerShip->setX(*playerShip->getX() - 10);
+                player->setX(*player->getX() - 3);
             }
             break;
         case Right:
-            if (*playerShip->getX() < 720)
+            if (*player->getX() < 720)
             {
-                playerShip->setX(*playerShip->getX() + 10);
+                player->setX(*player->getX() + 3);
             }
             break;
         case Shoot:
             cout << rockets.size() << endl;
             if(rockets.size() < 5) // Max 5 rockets in existence
             {
-                x = *playerShip->getX()+ *playerShip->getWidth()/2;
-                y = *playerShip->getY();
-                rockets.push_back(af->getPlayerRocket(x,y));
+                x = *player->getX()+ *player->getWidth()/2;
+                y = *player->getY();
+                rockets.push_back(af->getRocket(x,y));
             }
             break;
         default:
@@ -89,7 +90,7 @@ bool Game::handleEvent(Event e)
     return running;
 }
 
-void Game::movePlayerRockets()
+void Game::moveRockets()
 {
     Entity* playerRocket;
     for(unsigned int i=0; i<rockets.size(); i++)
@@ -139,15 +140,19 @@ void Game::moveEnemies()
             if (right)
             {
                 enemy->setX(*enemy->getX() + 20);
-                //std::cout << *enemy->getX() << endl;
             }
             else // going left
             {
                 enemy->setX(*enemy->getX() - 20);
-                //std::cout << *enemy->getX() << endl;
             }
         }
     }
+}
+
+void Game::shootEnemies()
+{
+
+
 }
 
 void Game::collisionDetection()

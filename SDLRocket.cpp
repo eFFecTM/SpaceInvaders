@@ -1,10 +1,10 @@
-#include "SDLPlayerShip.h"
+#include "SDLRocket.h"
 
-SDLPlayerShip::SDLPlayerShip(int* windowWidth, int* windowHeight, SDL_Renderer* renderer, int x, int y)
+SDLRocket::SDLRocket(int* windowWidth, int* windowHeight, SDL_Renderer* renderer, int x, int y)
 {
     this->windowWidth = windowWidth;
     this->windowHeight = windowHeight;
-    surface = SDL_LoadBMP("resources/SpaceShip.bmpx");
+    surface = SDL_LoadBMP("resources/PlayerRocket.bmpx");
     SDL_GetClipRect(surface, &rect);
     this->width = rect.w*4;
     this->height = rect.h*4;
@@ -15,12 +15,12 @@ SDLPlayerShip::SDLPlayerShip(int* windowWidth, int* windowHeight, SDL_Renderer* 
     SDL_FreeSurface(surface);
 }
 
-SDLPlayerShip::~SDLPlayerShip()
+SDLRocket::~SDLRocket()
 {
-    std::cout << "Deleting PlayerShip" << std::endl;
+    std::cout << "Deleting Rocket" << std::endl;
 }
 
-void SDLPlayerShip::render()
+void SDLRocket::render()
 {
     SDL_Rect rect;
     rect.x = x * *windowWidth/800;

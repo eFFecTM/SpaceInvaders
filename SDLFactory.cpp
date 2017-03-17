@@ -1,6 +1,6 @@
 #include "SDLFactory.h"
-#include "SDLPlayerShip.h"
-#include "SDLPlayerRocket.h"
+#include "SDLPlayer.h"
+#include "SDLRocket.h"
 #include "SDLEnemy.h"
 
 void SDLFactory::init()
@@ -76,20 +76,20 @@ SDLFactory::~SDLFactory()
     SDL_Quit();
 }
 
-PlayerShip* SDLFactory::getPlayerShip()
+Player* SDLFactory::getPlayer()
 {
     SDL_Rect rect;
     rect.x = 400;
     rect.y = 600;
-    return new SDLPlayerShip(&windowWidth,&windowHeight,renderer,rect.x,rect.y);
+    return new SDLPlayer(&windowWidth,&windowHeight,renderer,rect.x,rect.y);
 }
 
-PlayerRocket* SDLFactory::getPlayerRocket(int x, int y)
+Rocket* SDLFactory::getRocket(int x, int y)
 {
     SDL_Rect rect;
     rect.x = x;
     rect.y = y;
-    return new SDLPlayerRocket(&windowWidth,&windowHeight,renderer,rect.x,rect.y);
+    return new SDLRocket(&windowWidth,&windowHeight,renderer,rect.x,rect.y);
 }
 
 Enemy* SDLFactory::getEnemy(int x, int y, int type)

@@ -8,8 +8,8 @@ class SDLFactory : public AbstractFactory
 {
 public:
     virtual ~SDLFactory();
-    PlayerShip* getPlayerShip();
-    PlayerRocket* getPlayerRocket(int,int);
+    Player* getPlayer();
+    Rocket* getRocket(int,int);
     Enemy* getEnemy(int,int,int);
     void init();
     Event getEvent();
