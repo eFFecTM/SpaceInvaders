@@ -205,17 +205,18 @@ void Game::moveEnemies()
 
 void Game::collisionDetection()
 {
+    Enemy* enemy;
+    Rocket* rocket;
     for(unsigned int i=0;i<enemies.size();i++)
     {
         for(unsigned int j=0;j<playerRockets.size();j++)
         {
-            Enemy* enemy = enemies.at(i);
-            Rocket* rocket = playerRockets.at(j);
+            enemy = enemies.at(i);
+            rocket = playerRockets.at(j);
 
             if(hasIntersection(enemy,rocket))
             {
-                int type = *enemy->getType();
-                switch(type)
+                switch(*enemy->getType())
                 {
                     case 1:
                         score += 10;
@@ -244,7 +245,7 @@ void Game::collisionDetection()
 
     for(unsigned int i=0;i<enemyRockets.size();i++)
     {
-        Rocket* rocket = enemyRockets.at(i);
+        rocket = enemyRockets.at(i);
 
         if(hasIntersection(player,rocket))
         {

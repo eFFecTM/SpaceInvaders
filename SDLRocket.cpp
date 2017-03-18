@@ -20,6 +20,7 @@ SDLRocket::SDLRocket(int* windowWidth, int* windowHeight, SDL_Renderer* renderer
 
 SDLRocket::~SDLRocket()
 {
+    SDL_DestroyTexture(texture);
     std::cout << "Deleting Rocket" << std::endl;
 }
 

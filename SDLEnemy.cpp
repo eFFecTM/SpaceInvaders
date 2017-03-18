@@ -20,6 +20,7 @@ SDLEnemy::SDLEnemy(int* windowWidth, int* windowHeight, SDL_Renderer* renderer, 
 
 SDLEnemy::~SDLEnemy()
 {
+    SDL_DestroyTexture(texture);
     std::cout << "Deleting Enemy" << std::endl;
 }
 

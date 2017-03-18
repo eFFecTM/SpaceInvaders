@@ -9,19 +9,25 @@ SDLFactory::SDLFactory()
     SDL_Init(SDL_INIT_EVERYTHING);
     TTF_Init();
     Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
+
     window = SDL_CreateWindow("Space Invaders", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
     surface = SDL_LoadBMP("resources/Background.bmpx");
     SDL_GetClipRect(surface, &backgroundRect);
     backGroundTexture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
+
     font = TTF_OpenFont("resources/impact.ttf",32);
     renderScore(0);
+
     music = Mix_LoadMUS("resources/Mass_Effect_Uncharted_Worlds.mp3");
     Mix_VolumeMusic(MIX_MAX_VOLUME/4);
     Mix_FadeInMusic(music, -1,5000);
+
     rocket1 = Mix_LoadWAV("resources/rocket1.wav" );
     Mix_VolumeChunk(rocket1,MIX_MAX_VOLUME/4);
+
     rocket2 = Mix_LoadWAV("resources/rocket2.wav" );
     Mix_VolumeChunk(rocket2,MIX_MAX_VOLUME/4);
 }
@@ -81,6 +87,7 @@ void SDLFactory::renderBackground()
 
 void SDLFactory::renderScore(int score)
 {
+    SDL_DestroyTexture(textTexture);
     std::stringstream ss;
     ss << "Score: " << score;
     surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});

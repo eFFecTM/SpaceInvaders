@@ -17,6 +17,7 @@ SDLPlayer::SDLPlayer(int* windowWidth, int* windowHeight, SDL_Renderer* renderer
 
 SDLPlayer::~SDLPlayer()
 {
+    SDL_DestroyTexture(texture);
     std::cout << "Deleting Player" << std::endl;
 }
 
