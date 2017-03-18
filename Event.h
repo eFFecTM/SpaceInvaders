@@ -9,5 +9,7 @@ enum Event
     Close,
     Left,
     Right,
+    LeftShoot,
+    RightShoot,
     Shoot
 };

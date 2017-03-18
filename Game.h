@@ -14,9 +14,11 @@ public:
     Game(AbstractFactory*);
     void start();
     bool handleEvent(Event);
+    void shootPlayer();
+    void shootEnemies();
+    void movePlayer(Event);
     void moveRockets();
     void moveEnemies();
-    void shootEnemies();
     void collisionDetection();
     bool hasIntersection(Entity*,Entity*);
 

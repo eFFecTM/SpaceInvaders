@@ -4,6 +4,7 @@
 #include "AbstractFactory.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_Mixer.h>
 
 class SDLFactory : public AbstractFactory
 {
@@ -17,6 +18,10 @@ public:
     void renderBackground();
     void renderScore(int);
     void renderPresent();
+    void startTimer();
+    int getTickDifference();
+    void addDelay(int);
+    void playSoundEffect(int);
 private:
     SDL_Window* window = NULL; // Good practice
     SDL_Renderer* renderer = NULL;
@@ -26,6 +31,9 @@ private:
     int windowWidth = 800, windowHeight = 600;
     TTF_Font* font = NULL;
     SDL_Texture* textTexture = NULL;
+    Mix_Music* music = NULL;
+    Mix_Chunk *rocket1 = NULL, *rocket2 = NULL;
+    int startTicks = 0;
 };
 
 #endif //SPACEINVADERS_SDLFACTORY_H

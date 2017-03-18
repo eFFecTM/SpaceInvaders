@@ -17,6 +17,10 @@ public:
     virtual void renderBackground() = 0;
     virtual void renderScore(int) = 0;
     virtual void renderPresent() = 0;
+    virtual void startTimer() = 0;
+    virtual int getTickDifference() = 0;
+    virtual void addDelay(int) = 0;
+    virtual void playSoundEffect(int) = 0;
 };
 
 #endif //SPACEINVADERS_ABSTRACTFACTORY_H
