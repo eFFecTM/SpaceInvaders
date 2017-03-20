@@ -13,16 +13,20 @@ class Game
 public:
     Game(AbstractFactory*);
     void start();
-    bool handleEvent(Event);
+    bool handleEvent(Enum);
     void shootPlayer();
     void shootEnemies();
-    void movePlayer(Event);
+    void movePlayer(Enum);
     void moveRockets();
     void moveEnemies();
     void collisionDetection();
     bool hasIntersection(Entity*,Entity*);
     void menu();
     void playing();
+    void paused();
+    void showHighscores();
+    void addNewHighscore();
+    void checkDead();
 
 private:
     AbstractFactory *af;
@@ -33,9 +37,10 @@ private:
     vector<Enemy*> enemies;
     int ls,rs,us,bs;
     bool right = true;
-    int mode = 0; // 0 = Menu; 1 = Playing; 2 = Paused
-    bool isFirstPlaying = true;
-    int i=0,j=0;
+    Mode mode = Menu;
+    bool isFirstPlaying = true, continuePlaying = false;
+    int i=0;
+    int selectedOption = 1;
 
 
 };

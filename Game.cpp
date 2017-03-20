@@ -7,46 +7,81 @@ Game::Game(AbstractFactory* af)
 
 void Game::start()
 {
-    int countedFrames = 0;
     while(running)
     {
         af->startTimer();
-        Event e;
+        Enum e;
         e = af->getEvent();
         running = handleEvent(e);
         af->renderBackground();
         switch(mode)
         {
-            case 0:
+            case Menu:
                 menu();
                 break;
-            case 1:
+            case Playing:
                 playing();
+                checkDead();
                 break;
-            case 2:
-                //paused();
+            case Paused:
+                paused();
                 break;
+            case Highscores:
+                //showHighscores();
+            case NewHighscore:
+                //addNewHighscore();
             default:
                 break;
         }
         af->renderPresent();
-        ++countedFrames;
         int frameTicks = af->getTickDifference();
         if (frameTicks < 1000 / 50) // Limiting framerate to 50 fps (60 has no round number)
             af->addDelay(1000 / 50 - frameTicks);
     }
 }
 
+void Game::checkDead()
+{
+    if(*player->getLives() == 0)
+    {
+        for (Rocket* r : playerRockets)
+        {
+            delete r;
+        }
+        playerRockets.clear();
+
+        for (Rocket* r : enemyRockets)
+        {
+            delete r;
+        }
+        enemyRockets.clear();
+
+        for (Enemy* enemy : enemies)
+        {
+            delete enemy;
+        }
+        enemies.clear();
+
+        //addNewHighscore()
+        delete player;
+        mode = Menu;
+        isFirstPlaying = true;
+    }
+}
+
 void Game::menu()
 {
-    af->renderMenu();
+    af->renderMenu(selectedOption);
 }
 
 void Game::playing()
 {
     if(isFirstPlaying)
     {
-        player = af->getPlayer();
+        if(continuePlaying)
+            continuePlaying = false;
+        else
+            player = af->getPlayer();
         ls = 25; // left side border
         rs = 750; // right side border
         us = 50; // up side border
@@ -64,16 +99,11 @@ void Game::playing()
     if (i == 25)
     {
         moveEnemies();
+        shootEnemies();
         i = 0;
     }
     i++;
 
-    if(j == 25)
-    {
-        shootEnemies();
-        j=0;
-    }
-    j++;
     moveRockets();
     collisionDetection();
     af->renderScore(*player->getScore());
@@ -87,10 +117,29 @@ void Game::playing()
     for (Rocket* rocket : enemyRockets)
         rocket->render();
     if(enemies.empty())
-        running = false;
+    {
+        isFirstPlaying = true;
+        continuePlaying = true;
+    }
 }
 
-bool Game::handleEvent(Event e)
+void Game::paused()
+{
+    af->renderScore(*player->getScore());
+    af->renderLives(*player->getLives());
+    player->render();
+
+    for (Enemy* enemy : enemies)
+        enemy->render();
+    for (Rocket* rocket : playerRockets)
+        rocket->render();
+    for (Rocket* rocket : enemyRockets)
+        rocket->render();
+
+    af->renderPaused();
+}
+
+bool Game::handleEvent(Enum e)
 {
     bool running = true;
 
@@ -100,26 +149,26 @@ bool Game::handleEvent(Event e)
             running = false;
             break;
         case Left:
-            if(mode == 1)
+            if(mode == Playing)
                 movePlayer(Left);
             break;
         case Right:
-            if(mode == 1)
+            if(mode == Playing)
                 movePlayer(Right);
             break;
         case Shoot:
-            if(mode == 1)
+            if(mode == Playing)
                 shootPlayer();
             break;
         case LeftShoot:
-            if(mode == 1)
+            if(mode == Playing)
             {
                 movePlayer(Left);
                 shootPlayer();
             }
             break;
         case RightShoot:
-            if(mode == 1)
+            if(mode == Playing)
             {
                 movePlayer(Right);
                 shootPlayer();
@@ -127,23 +176,42 @@ bool Game::handleEvent(Event e)
             break;
         case Pause:
         {
-            if(mode == 2)
+            if(mode == Playing)
+                mode = Paused;
+            else if(mode == Paused)
+                mode = Playing;
+            else if(mode == Highscores)
+                mode = Menu;
+            break;
+        }
+        case MenuEnter:
+        {
+            if(mode == Menu)
             {
-                //
+                switch(selectedOption)
+                {
+                    case 1:
+                        mode = Playing;
+                        break;
+                    case 2:
+                        mode = Highscores;
+                        break;
+                    case 3:
+                        running = false;
+                        break;
+                    default:
+                        break;
+                }
             }
             break;
         }
         case MenuUp:
-            if(mode == 0)
-            {
-                //
-            }
+            if(mode == Menu && selectedOption > 1)
+                selectedOption--;
             break;
         case MenuDown:
-            if(mode == 0)
-            {
-                //
-            }
+            if(mode == Menu && selectedOption < 3)
+                selectedOption++;
             break;
         default:
             break;
@@ -179,7 +247,7 @@ void Game::shootEnemies() // Enemies shoots (random)
     }
 }
 
-void Game::movePlayer(Event e)
+void Game::movePlayer(Enum e)
 {
     if(e == Left && *player->getX() > 0)
         player->setX(*player->getX() - 5);
@@ -305,7 +373,6 @@ void Game::collisionDetection()
         if(hasIntersection(player,rocket))
         {
             delete rocket;
-            if(*player->getLives() )
             player->setLives(*player->getLives()-= 1);
             player->setX(400-*player->getWidth()/2);
             player->setY(600-*player->getHeight());
@@ -349,3 +416,12 @@ bool Game::hasIntersection(Entity* A, Entity* B)
     return true;
 }
 
+void Game::showHighscores()
+{
+
+}
+
+void Game::addNewHighscore()
+{
+
+}

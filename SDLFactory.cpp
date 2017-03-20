@@ -23,6 +23,42 @@ SDLFactory::SDLFactory()
     backGroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundS);
     SDL_FreeSurface(backgroundS);
 
+    surface = SDL_LoadBMP("resources/Paused.bmpx");
+    pausedTexture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+
+    font = TTF_OpenFont("resources/impact.ttf",32);
+
+    std::stringstream ss;
+    ss << "PLAY GAME";
+    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});
+    SDL_GetClipRect(surface, &menuOption1Rect);
+    menuOption1T = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{0,255,0});
+    menuSelectedOption1T = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+
+    ss.str(std::string()); // Clearing (reusing it)
+    ss << "HIGHSCORES";
+    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});
+    SDL_GetClipRect(surface, &menuOption2Rect);
+    menuOption2T = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{0,255,0});
+    menuSelectedOption2T = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+
+    ss.str(std::string()); // Clearing (reusing it)
+    ss << "EXIT GAME";
+    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});
+    SDL_GetClipRect(surface, &menuOption3Rect);
+    menuOption3T = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{0,255,0});
+    menuSelectedOption3T = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+
     playerS = SDL_LoadBMP("resources/SpaceShip.bmpx");
     rocket1S = SDL_LoadBMP("resources/Rocket1.bmpx");
     rocket2S = SDL_LoadBMP("resources/Rocket2.bmpx");
@@ -30,8 +66,6 @@ SDLFactory::SDLFactory()
     enemy2S = SDL_LoadBMP("resources/Enemy2.bmpx");
     enemy3S = SDL_LoadBMP("resources/Enemy3.bmpx");
     enemy4S = SDL_LoadBMP("resources/Enemy4.bmpx");
-
-    font = TTF_OpenFont("resources/impact.ttf",32);
 
     music = Mix_LoadMUS("resources/Mass_Effect_Uncharted_Worlds.mp3");
     Mix_VolumeMusic(MIX_MAX_VOLUME/8);
@@ -44,10 +78,10 @@ SDLFactory::SDLFactory()
     Mix_VolumeChunk(rocket2,MIX_MAX_VOLUME/4);
 }
 
-Event SDLFactory::getEvent()
+Enum SDLFactory::getEvent()
 {
     SDL_Event event;
-    Event e = Default;
+    Enum e = Default;
 
     while(SDL_PollEvent(&event) != 0) // handle all events in queue first!
     {
@@ -63,23 +97,38 @@ Event SDLFactory::getEvent()
                     windowHeight = event.window.data2;
                 }
                 break;
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.scancode)
+                {
+                    case SDL_SCANCODE_P:
+                        if(!event.key.repeat)
+                        {
+                            e = Pause;
+                        }
+                        break;
+                    case SDL_SCANCODE_UP:
+                        e = MenuUp;
+                        break;
+                    case SDL_SCANCODE_DOWN:
+                        e = MenuDown;
+                        break;
+                    case SDL_SCANCODE_RETURN:
+                        e = MenuEnter;
+                        break;
+                    default:
+                        break;
+                }
             default:
                 break;
         }
     }
 
     const Uint8* currentKeystates = SDL_GetKeyboardState(NULL);
-    if(currentKeystates[SDL_SCANCODE_P])
-        e = Pause;
-    else if(currentKeystates[SDL_SCANCODE_UP])
-        e = MenuUp;
-    else if(currentKeystates[SDL_SCANCODE_DOWN])
-        e = MenuDown;
-    else if(currentKeystates[SDL_SCANCODE_LEFT])
+    if(currentKeystates[SDL_SCANCODE_LEFT])
     {
         if (currentKeystates[SDL_SCANCODE_SPACE])
             e = LeftShoot;
-        else
+        else if(!currentKeystates[SDL_SCANCODE_RIGHT])
             e = Left;
     }
     else if(currentKeystates[SDL_SCANCODE_RIGHT])
@@ -102,10 +151,46 @@ void SDLFactory::renderBackground()
     SDL_RenderCopy(renderer, backGroundTexture, NULL, &r);
 }
 
-void SDLFactory::renderMenu()
+void SDLFactory::renderMenu(int selectedOption)
 {
     SDL_Rect r = {100*windowWidth/800,0,menuRect.w*windowWidth/800,menuRect.h*windowHeight/600};
     SDL_RenderCopy(renderer, menuTexture, NULL, &r);
+
+    switch(selectedOption)
+    {
+        case 1:
+            r = {(400-menuOption1Rect.w/2)*windowWidth/800,350*windowHeight/600,menuOption1Rect.w*windowWidth/800,menuOption1Rect.h*windowHeight/600};
+            SDL_RenderCopy(renderer, menuSelectedOption1T, NULL, &r);
+            r = {(400-menuOption2Rect.w/2)*windowWidth/800,(400+menuOption1Rect.h)*windowHeight/600,menuOption2Rect.w*windowWidth/800,menuOption2Rect.h*windowHeight/600};
+            SDL_RenderCopy(renderer, menuOption2T, NULL, &r);
+            r = {(400-menuOption3Rect.w/2)*windowWidth/800,(450+2*menuOption1Rect.h)*windowHeight/600,menuOption3Rect.w*windowWidth/800,menuOption3Rect.h*windowHeight/600};
+            SDL_RenderCopy(renderer, menuOption3T, NULL, &r);
+            break;
+        case 2:
+            r = {(400-menuOption1Rect.w/2)*windowWidth/800,350*windowHeight/600,menuOption1Rect.w*windowWidth/800,menuOption1Rect.h*windowHeight/600};
+            SDL_RenderCopy(renderer, menuOption1T, NULL, &r);
+            r = {(400-menuOption2Rect.w/2)*windowWidth/800,(400+menuOption1Rect.h)*windowHeight/600,menuOption2Rect.w*windowWidth/800,menuOption2Rect.h*windowHeight/600};
+            SDL_RenderCopy(renderer, menuSelectedOption2T, NULL, &r);
+            r = {(400-menuOption3Rect.w/2)*windowWidth/800,(450+2*menuOption1Rect.h)*windowHeight/600,menuOption3Rect.w*windowWidth/800,menuOption3Rect.h*windowHeight/600};
+            SDL_RenderCopy(renderer, menuOption3T, NULL, &r);
+            break;
+        case 3:
+            r = {(400-menuOption1Rect.w/2)*windowWidth/800,350*windowHeight/600,menuOption1Rect.w*windowWidth/800,menuOption1Rect.h*windowHeight/600};
+            SDL_RenderCopy(renderer, menuOption1T, NULL, &r);
+            r = {(400-menuOption2Rect.w/2)*windowWidth/800,(400+menuOption1Rect.h)*windowHeight/600,menuOption2Rect.w*windowWidth/800,menuOption2Rect.h*windowHeight/600};
+            SDL_RenderCopy(renderer, menuOption2T, NULL, &r);
+            r = {(400-menuOption3Rect.w/2)*windowWidth/800,(450+2*menuOption1Rect.h)*windowHeight/600,menuOption3Rect.w*windowWidth/800,menuOption3Rect.h*windowHeight/600};
+            SDL_RenderCopy(renderer, menuSelectedOption3T, NULL, &r);
+            break;
+        default:
+            break;
+    }
+}
+
+void SDLFactory::renderPaused()
+{
+    SDL_Rect r = {backgroundRect.x,backgroundRect.y,windowWidth,windowHeight};
+    SDL_RenderCopy(renderer, pausedTexture, NULL, &r);
 }
 
 void SDLFactory::renderScore(int score)
@@ -113,10 +198,10 @@ void SDLFactory::renderScore(int score)
     SDL_DestroyTexture(scoreTexture);
     std::stringstream ss;
     ss << "Score: " << score;
-    scoreS = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});
-    SDL_GetClipRect(scoreS, &scoreRect);
-    scoreTexture = SDL_CreateTextureFromSurface(renderer,scoreS);
-    SDL_FreeSurface(scoreS);
+    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});
+    SDL_GetClipRect(surface, &scoreRect);
+    scoreTexture = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
     SDL_Rect r = {0,0,scoreRect.w*windowWidth/800,scoreRect.h*windowHeight/600};
     SDL_RenderCopy(renderer, scoreTexture, NULL, &r);
 }
@@ -126,14 +211,13 @@ void SDLFactory::renderLives(int lives)
     SDL_DestroyTexture(livesTexture);
     std::stringstream ss;
     ss << "Lives left: " << lives;
-    livesS = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});
-    SDL_GetClipRect(livesS, &livesRect);
-    livesTexture = SDL_CreateTextureFromSurface(renderer,livesS);
-    SDL_FreeSurface(livesS);
-    SDL_Rect r = {(800-livesRect.w)*windowHeight/800,0,livesRect.w*windowWidth/800,livesRect.h*windowHeight/600};
+    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,0,0});
+    SDL_GetClipRect(surface, &livesRect);
+    livesTexture = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+    SDL_Rect r = {(800-livesRect.w)*windowWidth/800,0,livesRect.w*windowWidth/800,livesRect.h*windowHeight/600};
     SDL_RenderCopy(renderer, livesTexture, NULL, &r);
 }
-
 
 void SDLFactory::renderPresent()
 {
