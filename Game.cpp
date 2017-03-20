@@ -7,61 +7,87 @@ Game::Game(AbstractFactory* af)
 
 void Game::start()
 {
-    player = af->getPlayer();
-    ls = 25; // left side border
-    rs = 750; // right side border
-    us = 50; // up side border
-    bs = 600-*player->getHeight(); // bottom side border
-    for(unsigned int i=0; i<10; i++)
-    {
-        enemies.push_back(af->getEnemy(ls+60*i,us,1));
-        enemies.push_back(af->getEnemy(ls+60*i,us+50,2));
-        enemies.push_back(af->getEnemy(ls+60*i,us+2*50,3));
-        enemies.push_back(af->getEnemy(ls+60*i,us+3*50,4));
-    }
-
-    Event e;
-    int i=0, j=0;
     int countedFrames = 0;
     while(running)
     {
         af->startTimer();
+        Event e;
         e = af->getEvent();
         running = handleEvent(e);
-
-        if (i == 25)
-        {
-            moveEnemies();
-            i = 0;
-        }
-        i++;
-
-        if(j == 25)
-        {
-            shootEnemies();
-            j=0;
-        }
-        j++;
-        moveRockets();
-        collisionDetection();
         af->renderBackground();
-        af->renderScore(score);
-        player->render();
-
-        for (Enemy* enemy : enemies)
-            enemy->render();
-        for (Rocket* rocket : playerRockets)
-            rocket->render();
-        for (Rocket* rocket : enemyRockets)
-            rocket->render();
+        switch(mode)
+        {
+            case 0:
+                menu();
+                break;
+            case 1:
+                playing();
+                break;
+            case 2:
+                //paused();
+                break;
+            default:
+                break;
+        }
         af->renderPresent();
         ++countedFrames;
         int frameTicks = af->getTickDifference();
         if (frameTicks < 1000 / 50) // Limiting framerate to 50 fps (60 has no round number)
             af->addDelay(1000 / 50 - frameTicks);
-        if(enemies.empty())
-            running = false;
     }
+}
+
+void Game::menu()
+{
+    af->renderMenu();
+}
+
+void Game::playing()
+{
+    if(isFirstPlaying)
+    {
+        player = af->getPlayer();
+        ls = 25; // left side border
+        rs = 750; // right side border
+        us = 50; // up side border
+        bs = 600-*player->getHeight(); // bottom side border
+        for(unsigned int i=0; i<10; i++)
+        {
+            enemies.push_back(af->getEnemy(ls+60*i,us,1));
+            enemies.push_back(af->getEnemy(ls+60*i,us+50,2));
+            enemies.push_back(af->getEnemy(ls+60*i,us+2*50,3));
+            enemies.push_back(af->getEnemy(ls+60*i,us+3*50,4));
+        }
+        isFirstPlaying = false;
+    }
+
+    if (i == 25)
+    {
+        moveEnemies();
+        i = 0;
+    }
+    i++;
+
+    if(j == 25)
+    {
+        shootEnemies();
+        j=0;
+    }
+    j++;
+    moveRockets();
+    collisionDetection();
+    af->renderScore(*player->getScore());
+    af->renderLives(*player->getLives());
+    player->render();
+
+    for (Enemy* enemy : enemies)
+        enemy->render();
+    for (Rocket* rocket : playerRockets)
+        rocket->render();
+    for (Rocket* rocket : enemyRockets)
+        rocket->render();
+    if(enemies.empty())
+        running = false;
 }
 
 bool Game::handleEvent(Event e)
@@ -74,21 +100,50 @@ bool Game::handleEvent(Event e)
             running = false;
             break;
         case Left:
-            movePlayer(Left);
+            if(mode == 1)
+                movePlayer(Left);
             break;
         case Right:
-            movePlayer(Right);
+            if(mode == 1)
+                movePlayer(Right);
             break;
         case Shoot:
-            shootPlayer();
+            if(mode == 1)
+                shootPlayer();
             break;
         case LeftShoot:
-            movePlayer(Left);
-            shootPlayer();
+            if(mode == 1)
+            {
+                movePlayer(Left);
+                shootPlayer();
+            }
             break;
         case RightShoot:
-            movePlayer(Right);
-            shootPlayer();
+            if(mode == 1)
+            {
+                movePlayer(Right);
+                shootPlayer();
+            }
+            break;
+        case Pause:
+        {
+            if(mode == 2)
+            {
+                //
+            }
+            break;
+        }
+        case MenuUp:
+            if(mode == 0)
+            {
+                //
+            }
+            break;
+        case MenuDown:
+            if(mode == 0)
+            {
+                //
+            }
             break;
         default:
             break;
@@ -219,16 +274,16 @@ void Game::collisionDetection()
                 switch(*enemy->getType())
                 {
                     case 1:
-                        score += 10;
+                        player->setScore(*player->getScore() += 10);
                         break;
                     case 2:
-                        score += 20;
+                        player->setScore(*player->getScore() += 20);
                         break;
                     case 3:
-                        score += 30;
+                        player->setScore(*player->getScore() += 30);
                         break;
                     case 4:
-                        score += 50;
+                        player->setScore(*player->getScore() += 50);
                         break;
                     default:
                         break;
@@ -250,6 +305,10 @@ void Game::collisionDetection()
         if(hasIntersection(player,rocket))
         {
             delete rocket;
+            if(*player->getLives() )
+            player->setLives(*player->getLives()-= 1);
+            player->setX(400-*player->getWidth()/2);
+            player->setY(600-*player->getHeight());
             enemyRockets.erase(enemyRockets.begin() + i);
             break;
         }
@@ -289,3 +348,4 @@ bool Game::hasIntersection(Entity* A, Entity* B)
 
     return true;
 }
+

@@ -16,7 +16,9 @@ public:
     Enemy* getEnemy(int,int,int);
     Event getEvent();
     void renderBackground();
+    void renderMenu();
     void renderScore(int);
+    void renderLives(int);
     void renderPresent();
     void startTimer();
     int getTickDifference();
@@ -25,12 +27,12 @@ public:
 private:
     SDL_Window* window = NULL; // Good practice
     SDL_Renderer* renderer = NULL;
-    SDL_Surface* surface = NULL;
-    SDL_Rect backgroundRect, textRect;
-    SDL_Texture* backGroundTexture = NULL;
+    SDL_Surface* backgroundS=NULL,*menuS=NULL,*scoreS=NULL,*livesS=NULL,*rocket1S=NULL,*rocket2S=NULL,*playerS=NULL,*enemy1S=NULL,*enemy2S=NULL,*enemy3S=NULL,*enemy4S=NULL;
+    SDL_Rect backgroundRect,menuRect,scoreRect,livesRect;
+    SDL_Texture* backGroundTexture = NULL,*menuTexture = NULL;
     int windowWidth = 800, windowHeight = 600;
     TTF_Font* font = NULL;
-    SDL_Texture* textTexture = NULL;
+    SDL_Texture* scoreTexture = NULL,*livesTexture = NULL;
     Mix_Music* music = NULL;
     Mix_Chunk *rocket1 = NULL, *rocket2 = NULL;
     int startTicks = 0;

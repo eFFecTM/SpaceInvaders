@@ -7,19 +7,17 @@
 
 #include "Enemy.h"
 #include <SDL.h>
-#include <sstream>
-#include <string>
 
 class SDLEnemy : public Enemy
 {
 public:
-    SDLEnemy(int*,int*,SDL_Renderer*,int,int,int);
+    SDLEnemy(int*,int*,SDL_Renderer*,SDL_Surface*,int,int,int);
     virtual ~SDLEnemy();
     int* getType();
     void render();
 private:
     int *windowWidth, *windowHeight;
-    SDL_Surface* surface = NULL;
+    //SDL_Surface* surface = NULL;
     SDL_Texture* texture = NULL;
     SDL_Renderer* renderer = NULL;
     SDL_Rect rect;

@@ -21,6 +21,8 @@ public:
     void moveEnemies();
     void collisionDetection();
     bool hasIntersection(Entity*,Entity*);
+    void menu();
+    void playing();
 
 private:
     AbstractFactory *af;
@@ -31,7 +33,11 @@ private:
     vector<Enemy*> enemies;
     int ls,rs,us,bs;
     bool right = true;
-    int score = 0;
+    int mode = 0; // 0 = Menu; 1 = Playing; 2 = Paused
+    bool isFirstPlaying = true;
+    int i=0,j=0;
+
+
 };
 
 

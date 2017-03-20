@@ -7,12 +7,12 @@
 class SDLPlayer : public Player
 {
 public:
-    SDLPlayer(int*,int*,SDL_Renderer*,int,int);
+    SDLPlayer(int*,int*,SDL_Renderer*,SDL_Surface*,int,int);
     virtual ~SDLPlayer();
     void render();
 private:
     int *windowWidth, *windowHeight;
-    SDL_Surface* surface = NULL;
+    //SDL_Surface* surface = NULL;
     SDL_Texture* texture = NULL;
     SDL_Renderer* renderer = NULL;
     SDL_Rect rect;

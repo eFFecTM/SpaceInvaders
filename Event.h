@@ -11,5 +11,8 @@ enum Event
     Right,
     LeftShoot,
     RightShoot,
-    Shoot
+    Shoot,
+    MenuUp,
+    MenuDown,
+    Pause
 };

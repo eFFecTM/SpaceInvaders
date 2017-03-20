@@ -1,10 +1,9 @@
 #include "SDLPlayer.h"
 
-SDLPlayer::SDLPlayer(int* windowWidth, int* windowHeight, SDL_Renderer* renderer, int x, int y)
+SDLPlayer::SDLPlayer(int* windowWidth, int* windowHeight, SDL_Renderer* renderer, SDL_Surface* surface, int x, int y)
 {
     this->windowWidth = windowWidth;
     this->windowHeight = windowHeight;
-    surface = SDL_LoadBMP("resources/SpaceShip.bmpx");
     SDL_GetClipRect(surface, &rect);
     this->width = rect.w*3;
     this->height = rect.h*3;
@@ -12,7 +11,6 @@ SDLPlayer::SDLPlayer(int* windowWidth, int* windowHeight, SDL_Renderer* renderer
     this->y = y-height;
     this->renderer = renderer;
     texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
 }
 
 SDLPlayer::~SDLPlayer()
