@@ -13,10 +13,10 @@ class Game
 public:
     Game(AbstractFactory*);
     void start();
-    bool handleEvent(Enum);
+    bool handleEvent(Event);
     void shootPlayer();
     void shootEnemies();
-    void movePlayer(Enum);
+    void movePlayer(Event);
     void moveRockets();
     void moveEnemies();
     void collisionDetection();

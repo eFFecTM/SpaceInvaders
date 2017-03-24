@@ -10,7 +10,7 @@ void Game::start()
     while(running)
     {
         af->startTimer();
-        Enum e;
+        Event e;
         e = af->getEvent();
         running = handleEvent(e);
         af->renderBackground();
@@ -139,7 +139,7 @@ void Game::paused()
     af->renderPaused();
 }
 
-bool Game::handleEvent(Enum e)
+bool Game::handleEvent(Event e)
 {
     bool running = true;
 
@@ -247,7 +247,7 @@ void Game::shootEnemies() // Enemies shoots (random)
     }
 }
 
-void Game::movePlayer(Enum e)
+void Game::movePlayer(Event e)
 {
     if(e == Left && *player->getX() > 0)
         player->setX(*player->getX() - 5);

@@ -13,75 +13,47 @@ SDLFactory::SDLFactory()
     window = SDL_CreateWindow("Space Invaders", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    menuS = SDL_LoadBMP("resources/Menu.bmpx");
-    SDL_GetClipRect(menuS, &menuRect);
-    menuTexture = SDL_CreateTextureFromSurface(renderer, menuS);
-    SDL_FreeSurface(menuS);
-
-    backgroundS = SDL_LoadBMP("resources/Background.bmpx");
-    SDL_GetClipRect(backgroundS, &backgroundRect);
-    backGroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundS);
-    SDL_FreeSurface(backgroundS);
-
-    surface = SDL_LoadBMP("resources/Paused.bmpx");
-    pausedTexture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
+    menuT = createTextureFromImage("resources/Menu.bmpx",&menuR);
+    backgroundT = createTextureFromImage("resources/Background.bmpx",&backgroundR);
+    pausedT = createTextureFromImage("resources/Paused.bmpx",&backgroundR); // Same size as background rect, so reusing it
 
     font = TTF_OpenFont("resources/impact.ttf",32);
 
-    std::stringstream ss;
-    ss << "PLAY GAME";
-    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});
-    SDL_GetClipRect(surface, &menuOption1Rect);
-    menuOption1T = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{0,255,0});
-    menuSelectedOption1T = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
+    menuOption1T = createTextureFromText("PLAY GAME",{255,255,255},&menuOption1R);
+    menuSelectedOption1T = createTextureFromText("PLAY GAME",{0,255,0},&menuOption1R);
 
-    ss.str(std::string()); // Clearing (reusing it)
-    ss << "HIGHSCORES";
-    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});
-    SDL_GetClipRect(surface, &menuOption2Rect);
-    menuOption2T = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{0,255,0});
-    menuSelectedOption2T = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
+    menuOption2T = createTextureFromText("HIGHSCORES",{255,255,255},&menuOption2R);
+    menuSelectedOption2T = createTextureFromText("HIGHSCORES",{0,255,0},&menuOption2R);
 
-    ss.str(std::string()); // Clearing (reusing it)
-    ss << "EXIT GAME";
-    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});
-    SDL_GetClipRect(surface, &menuOption3Rect);
-    menuOption3T = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{0,255,0});
-    menuSelectedOption3T = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
+    menuOption3T = createTextureFromText("EXIT GAME",{255,255,255},&menuOption3R);
+    menuSelectedOption3T = createTextureFromText("EXIT GAME",{0,255,0},&menuOption3R);
 
-    playerS = SDL_LoadBMP("resources/SpaceShip.bmpx");
-    rocket1S = SDL_LoadBMP("resources/Rocket1.bmpx");
-    rocket2S = SDL_LoadBMP("resources/Rocket2.bmpx");
-    enemy1S = SDL_LoadBMP("resources/Enemy1.bmpx");
-    enemy2S = SDL_LoadBMP("resources/Enemy2.bmpx");
-    enemy3S = SDL_LoadBMP("resources/Enemy3.bmpx");
-    enemy4S = SDL_LoadBMP("resources/Enemy4.bmpx");
+    playerT = createTextureFromImage("resources/SpaceShip.bmpx",&playerR);
+    rocket1T = createTextureFromImage("resources/Rocket1.bmpx",&rocket1R);
+    rocket2T = createTextureFromImage("resources/Rocket2.bmpx",&rocket2R);
+    enemy1T = createTextureFromImage("resources/Enemy1.bmpx",&enemy1R);
+    enemy2T = createTextureFromImage("resources/Enemy2.bmpx",&enemy2R);
+    enemy3T = createTextureFromImage("resources/Enemy3.bmpx",&enemy3R);
+    enemy4T = createTextureFromImage("resources/Enemy4.bmpx",&enemy4R);
 
-    music = Mix_LoadMUS("resources/Mass_Effect_Uncharted_Worlds.mp3");
+//    music = Mix_LoadMUS("resources/Mass_Effect_Uncharted_Worlds.mp3");
+    music = Mix_LoadMUS("resources/Icarus_8bit.mp3");
     Mix_VolumeMusic(MIX_MAX_VOLUME/8);
     Mix_FadeInMusic(music, -1,5000);
 
-    rocket1 = Mix_LoadWAV("resources/rocket1.wav" );
-    Mix_VolumeChunk(rocket1,MIX_MAX_VOLUME/4);
+    rocket1M = Mix_LoadWAV("resources/rocket1.wav");
+    Mix_VolumeChunk(rocket1M,MIX_MAX_VOLUME/4);
 
-    rocket2 = Mix_LoadWAV("resources/rocket2.wav" );
-    Mix_VolumeChunk(rocket2,MIX_MAX_VOLUME/4);
+    rocket2M = Mix_LoadWAV("resources/rocket2.wav");
+    Mix_VolumeChunk(rocket2M,MIX_MAX_VOLUME/4);
+
+    sdlRender = new SDLRender(renderer);
 }
 
-Enum SDLFactory::getEvent()
+Event SDLFactory::getEvent()
 {
     SDL_Event event;
-    Enum e = Default;
+    Event e = Default;
 
     while(SDL_PollEvent(&event) != 0) // handle all events in queue first!
     {
@@ -93,8 +65,7 @@ Enum SDLFactory::getEvent()
             case SDL_WINDOWEVENT:
                 if(event.window.event == SDL_WINDOWEVENT_RESIZED)
                 {
-                    windowWidth = event.window.data1;
-                    windowHeight = event.window.data2;
+                    sdlRender->updateWindowSize(event.window.data1,event.window.data2);
                 }
                 break;
             case SDL_KEYDOWN:
@@ -144,43 +115,51 @@ Enum SDLFactory::getEvent()
     return e;
 }
 
+SDL_Texture* SDLFactory::createTextureFromImage(std::string path, SDL_Rect* rect )
+{
+    SDL_Surface* surface = SDL_LoadBMP(path.c_str());
+    SDL_GetClipRect(surface, rect);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    return texture;
+}
+
+SDL_Texture* SDLFactory::createTextureFromText(std::string text, SDL_Color color ,SDL_Rect* rect)
+{
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(),color);
+    SDL_GetClipRect(surface, rect);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+    return texture;
+}
+
 void SDLFactory::renderBackground()
 {
     SDL_RenderClear(renderer);
-    SDL_Rect r = {backgroundRect.x,backgroundRect.y,windowWidth,windowHeight};
-    SDL_RenderCopy(renderer, backGroundTexture, NULL, &r);
+    sdlRender->render(backgroundT,backgroundR);
 }
 
 void SDLFactory::renderMenu(int selectedOption)
 {
-    SDL_Rect r = {100*windowWidth/800,0,menuRect.w*windowWidth/800,menuRect.h*windowHeight/600};
-    SDL_RenderCopy(renderer, menuTexture, NULL, &r);
+    SDL_Rect rect = {100,0,menuR.w,menuR.h};
+    sdlRender->render(menuT,rect);
 
     switch(selectedOption)
     {
         case 1:
-            r = {(400-menuOption1Rect.w/2)*windowWidth/800,350*windowHeight/600,menuOption1Rect.w*windowWidth/800,menuOption1Rect.h*windowHeight/600};
-            SDL_RenderCopy(renderer, menuSelectedOption1T, NULL, &r);
-            r = {(400-menuOption2Rect.w/2)*windowWidth/800,(400+menuOption1Rect.h)*windowHeight/600,menuOption2Rect.w*windowWidth/800,menuOption2Rect.h*windowHeight/600};
-            SDL_RenderCopy(renderer, menuOption2T, NULL, &r);
-            r = {(400-menuOption3Rect.w/2)*windowWidth/800,(450+2*menuOption1Rect.h)*windowHeight/600,menuOption3Rect.w*windowWidth/800,menuOption3Rect.h*windowHeight/600};
-            SDL_RenderCopy(renderer, menuOption3T, NULL, &r);
+            sdlRender->render(menuSelectedOption1T,{400-menuOption1R.w/2,350,menuOption1R.w,menuOption1R.h});
+            sdlRender->render(menuOption2T,{400-menuOption2R.w/2,400+menuOption1R.h,menuOption2R.w,menuOption2R.h});
+            sdlRender->render(menuOption3T,{400-menuOption3R.w/2,450+2*menuOption1R.h,menuOption3R.w,menuOption3R.h});
             break;
         case 2:
-            r = {(400-menuOption1Rect.w/2)*windowWidth/800,350*windowHeight/600,menuOption1Rect.w*windowWidth/800,menuOption1Rect.h*windowHeight/600};
-            SDL_RenderCopy(renderer, menuOption1T, NULL, &r);
-            r = {(400-menuOption2Rect.w/2)*windowWidth/800,(400+menuOption1Rect.h)*windowHeight/600,menuOption2Rect.w*windowWidth/800,menuOption2Rect.h*windowHeight/600};
-            SDL_RenderCopy(renderer, menuSelectedOption2T, NULL, &r);
-            r = {(400-menuOption3Rect.w/2)*windowWidth/800,(450+2*menuOption1Rect.h)*windowHeight/600,menuOption3Rect.w*windowWidth/800,menuOption3Rect.h*windowHeight/600};
-            SDL_RenderCopy(renderer, menuOption3T, NULL, &r);
+            sdlRender->render(menuOption1T,{400-menuOption1R.w/2,350,menuOption1R.w,menuOption1R.h});
+            sdlRender->render(menuSelectedOption2T,{400-menuOption2R.w/2,400+menuOption1R.h,menuOption2R.w,menuOption2R.h});
+            sdlRender->render(menuOption3T,{400-menuOption3R.w/2,450+2*menuOption1R.h,menuOption3R.w,menuOption3R.h});
             break;
         case 3:
-            r = {(400-menuOption1Rect.w/2)*windowWidth/800,350*windowHeight/600,menuOption1Rect.w*windowWidth/800,menuOption1Rect.h*windowHeight/600};
-            SDL_RenderCopy(renderer, menuOption1T, NULL, &r);
-            r = {(400-menuOption2Rect.w/2)*windowWidth/800,(400+menuOption1Rect.h)*windowHeight/600,menuOption2Rect.w*windowWidth/800,menuOption2Rect.h*windowHeight/600};
-            SDL_RenderCopy(renderer, menuOption2T, NULL, &r);
-            r = {(400-menuOption3Rect.w/2)*windowWidth/800,(450+2*menuOption1Rect.h)*windowHeight/600,menuOption3Rect.w*windowWidth/800,menuOption3Rect.h*windowHeight/600};
-            SDL_RenderCopy(renderer, menuSelectedOption3T, NULL, &r);
+            sdlRender->render(menuOption1T,{400-menuOption1R.w/2,350,menuOption1R.w,menuOption1R.h});
+            sdlRender->render(menuOption2T,{400-menuOption2R.w/2,400+menuOption1R.h,menuOption2R.w,menuOption2R.h});
+            sdlRender->render(menuSelectedOption3T,{400-menuOption3R.w/2,450+2*menuOption1R.h,menuOption3R.w,menuOption3R.h});
             break;
         default:
             break;
@@ -189,34 +168,25 @@ void SDLFactory::renderMenu(int selectedOption)
 
 void SDLFactory::renderPaused()
 {
-    SDL_Rect r = {backgroundRect.x,backgroundRect.y,windowWidth,windowHeight};
-    SDL_RenderCopy(renderer, pausedTexture, NULL, &r);
+    sdlRender->render(pausedT,backgroundR);
 }
 
 void SDLFactory::renderScore(int score)
 {
-    SDL_DestroyTexture(scoreTexture);
+    SDL_DestroyTexture(scoreT);
     std::stringstream ss;
     ss << "Score: " << score;
-    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,255,255});
-    SDL_GetClipRect(surface, &scoreRect);
-    scoreTexture = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-    SDL_Rect r = {0,0,scoreRect.w*windowWidth/800,scoreRect.h*windowHeight/600};
-    SDL_RenderCopy(renderer, scoreTexture, NULL, &r);
+    scoreT = createTextureFromText(ss.str().c_str(),{255,255,255},&scoreR);
+    sdlRender->render(scoreT,scoreR);
 }
 
 void SDLFactory::renderLives(int lives)
 {
-    SDL_DestroyTexture(livesTexture);
+    SDL_DestroyTexture(livesT);
     std::stringstream ss;
     ss << "Lives left: " << lives;
-    surface = TTF_RenderText_Blended(font, ss.str().c_str(),{255,0,0});
-    SDL_GetClipRect(surface, &livesRect);
-    livesTexture = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-    SDL_Rect r = {(800-livesRect.w)*windowWidth/800,0,livesRect.w*windowWidth/800,livesRect.h*windowHeight/600};
-    SDL_RenderCopy(renderer, livesTexture, NULL, &r);
+    livesT = createTextureFromText(ss.str().c_str(),{255,0,0},&livesR);
+    sdlRender->render(livesT,{800-livesR.w,0,livesR.w,livesR.h});
 }
 
 void SDLFactory::renderPresent()
@@ -226,56 +196,72 @@ void SDLFactory::renderPresent()
 
 SDLFactory::~SDLFactory()
 {
-    Mix_FreeChunk(rocket1);
-    Mix_FreeChunk(rocket2);
+    Mix_FreeChunk(rocket1M);
+    Mix_FreeChunk(rocket2M);
     Mix_FreeMusic(music);
-    SDL_DestroyTexture(livesTexture);
-    SDL_DestroyTexture(scoreTexture);
-    SDL_DestroyTexture(backGroundTexture);
+    SDL_DestroyTexture(livesT);
+    SDL_DestroyTexture(scoreT);
+    SDL_DestroyTexture(backgroundT);
+    SDL_DestroyTexture(menuT);
+    SDL_DestroyTexture(menuOption1T);
+    SDL_DestroyTexture(menuOption2T);
+    SDL_DestroyTexture(menuOption3T);
+    SDL_DestroyTexture(menuSelectedOption1T);
+    SDL_DestroyTexture(menuSelectedOption2T);
+    SDL_DestroyTexture(menuSelectedOption3T);
+    SDL_DestroyTexture(playerT);
+    SDL_DestroyTexture(rocket1T);
+    SDL_DestroyTexture(rocket2T);
+    SDL_DestroyTexture(enemy1T);
+    SDL_DestroyTexture(enemy2T);
+    SDL_DestroyTexture(enemy3T);
+    SDL_DestroyTexture(enemy4T);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+
     TTF_Quit();
     SDL_Quit();
 }
 
 Player* SDLFactory::getPlayer()
 {
-    SDL_Rect rect;
-    rect.x = 400;
-    rect.y = 600;
-    return new SDLPlayer(&windowWidth,&windowHeight,renderer,playerS,rect.x,rect.y);
+    playerR = {400,600,playerR.w,playerR.h};
+    return new SDLPlayer(sdlRender,playerT,&playerR);
 
 }
 
 Rocket* SDLFactory::getRocket(int x, int y, int type)
 {
-    SDL_Rect rect;
-    rect.x = x;
-    rect.y = y;
     if(type == 1)
-        return new SDLRocket(&windowWidth,&windowHeight,renderer,rocket1S, rect.x,rect.y, type);
+    {
+        rocket1R = {x,y,rocket1R.w,rocket1R.h};
+        return new SDLRocket(sdlRender,rocket1T,&rocket1R,type);
+    }
     else if(type == 2)
-        return new SDLRocket(&windowWidth,&windowHeight,renderer,rocket2S, rect.x,rect.y, type);
+    {
+        rocket2R = {x,y,rocket2R.w,rocket2R.h};
+        return new SDLRocket(sdlRender,rocket2T,&rocket2R,type);
+    }
     else
         return 0;
 }
 
 Enemy* SDLFactory::getEnemy(int x, int y, int type)
 {
-    SDL_Rect rect;
-    rect.x = x;
-    rect.y = y;
-
     switch(type)
     {
         case 1:
-            return new SDLEnemy(&windowWidth,&windowHeight,renderer,enemy1S,rect.x,rect.y,type);
+            enemy1R = {x,y,enemy1R.w,enemy1R.h};
+            return new SDLEnemy(sdlRender,enemy1T,&enemy1R,type);
         case 2:
-            return new SDLEnemy(&windowWidth,&windowHeight,renderer,enemy2S,rect.x,rect.y,type);
+            enemy2R = {x,y,enemy2R.w,enemy2R.h};
+            return new SDLEnemy(sdlRender,enemy2T,&enemy2R,type);
         case 3:
-            return new SDLEnemy(&windowWidth,&windowHeight,renderer,enemy3S,rect.x,rect.y,type);
+            enemy3R = {x,y,enemy3R.w,enemy3R.h};
+            return new SDLEnemy(sdlRender,enemy3T,&enemy3R,type);
         case 4:
-            return new SDLEnemy(&windowWidth,&windowHeight,renderer,enemy4S,rect.x,rect.y,type);
+            enemy4R = {x,y,enemy4R.w,enemy4R.h};
+            return new SDLEnemy(sdlRender,enemy4T,&enemy4R,type);
         default:
             return 0;
     }
@@ -299,7 +285,7 @@ void SDLFactory::addDelay(int time)
 void SDLFactory::playSoundEffect(int type)
 {
     if(type == 1)
-        Mix_PlayChannel(-1,rocket1,0);
+        Mix_PlayChannel(-1,rocket1M,0);
     else
-        Mix_PlayChannel(-1,rocket2,0);
+        Mix_PlayChannel(-1,rocket2M,0);
 }

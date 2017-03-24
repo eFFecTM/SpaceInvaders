@@ -1,7 +1,8 @@
-#ifndef SPACEINVADERS_SDLPLAYERROCKET_H
-#define SPACEINVADERS_SDLPLAYERROCKET_H
+#ifndef SPACEINVADERS_SDLROCKET_H
+#define SPACEINVADERS_SDLROCKET_H
 
 #include "Rocket.h"
+#include "SDLRender.h"
 #include <SDL.h>
 #include <sstream>
 #include <string>
@@ -9,16 +10,13 @@
 class SDLRocket : public Rocket
 {
 public:
-    SDLRocket(int*,int*,SDL_Renderer*,SDL_Surface*,int,int,int);
+    SDLRocket(SDLRender*,SDL_Texture*,SDL_Rect*,int);
     virtual ~SDLRocket();
     int* getType();
     void render();
 private:
-    int *windowWidth, *windowHeight;
-    //SDL_Surface* surface = NULL;
     SDL_Texture* texture = NULL;
-    SDL_Renderer* renderer = NULL;
-    SDL_Rect rect;
+    SDLRender* sdlRender = NULL;
 };
 
-#endif //SPACEINVADERS_SDLPLAYERROCKET_H
+#endif //SPACEINVADERS_SDLROCKET_H

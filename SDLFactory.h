@@ -2,6 +2,7 @@
 #define SPACEINVADERS_SDLFACTORY_H
 
 #include "AbstractFactory.h"
+#include "SDLRender.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_Mixer.h>
@@ -14,7 +15,9 @@ public:
     Player* getPlayer();
     Rocket* getRocket(int,int,int);
     Enemy* getEnemy(int,int,int);
-    Enum getEvent();
+    Event getEvent();
+    SDL_Texture* createTextureFromImage(std::string,SDL_Rect*);
+    SDL_Texture* createTextureFromText(std::string,SDL_Color,SDL_Rect*);
     void renderBackground();
     void renderMenu(int);
     void renderPaused();
@@ -28,17 +31,14 @@ public:
 private:
     SDL_Window* window = NULL; // Good practice
     SDL_Renderer* renderer = NULL;
-    SDL_Surface* surface=NULL,*backgroundS=NULL,*menuS=NULL,*scoreS=NULL,*livesS=NULL,*rocket1S=NULL,*rocket2S=NULL,*playerS=NULL,*enemy1S=NULL,*enemy2S=NULL,*enemy3S=NULL,*enemy4S=NULL;
-    SDL_Rect backgroundRect,menuRect,scoreRect,livesRect,menuOption1Rect,menuOption2Rect,menuOption3Rect;
-    SDL_Texture* backGroundTexture = NULL,*menuTexture = NULL,*scoreTexture = NULL,*livesTexture = NULL,*pausedTexture=NULL;
-    SDL_Texture* menuOption1T=NULL,*menuSelectedOption1T=NULL;
-    SDL_Texture* menuOption2T=NULL,*menuSelectedOption2T=NULL;
-    SDL_Texture* menuOption3T=NULL,*menuSelectedOption3T=NULL;
-    int windowWidth = 800, windowHeight = 600;
+    SDL_Rect menuR,backgroundR,scoreR,livesR,playerR,rocket1R,rocket2R,enemy1R,enemy2R,enemy3R,enemy4R,menuOption1R,menuOption2R,menuOption3R;
+    SDL_Texture *menuT=NULL,*backgroundT=NULL,*scoreT=NULL,*livesT=NULL,*pausedT=NULL,*playerT=NULL,*rocket1T=NULL,*rocket2T=NULL,*enemy1T=NULL,*enemy2T=NULL,*enemy3T=NULL,*enemy4T=NULL;
+    SDL_Texture *menuOption1T=NULL,*menuSelectedOption1T=NULL,* menuOption2T=NULL,*menuSelectedOption2T=NULL,*menuOption3T=NULL,*menuSelectedOption3T=NULL;
     TTF_Font* font = NULL;
     Mix_Music* music = NULL;
-    Mix_Chunk *rocket1 = NULL, *rocket2 = NULL;
+    Mix_Chunk *rocket1M = NULL, *rocket2M = NULL;
     int startTicks = 0;
+    SDLRender* sdlRender = NULL;
 };
 
 #endif //SPACEINVADERS_SDLFACTORY_H

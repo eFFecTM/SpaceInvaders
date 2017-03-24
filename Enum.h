@@ -3,7 +3,7 @@
 
 #endif //SPACEINVADERS_ENUM_H
 
-enum Enum
+enum Event
 {
     Default,
     Close,
@@ -25,10 +25,4 @@ enum Mode
     Paused,
     Highscores,
     NewHighscore
-};
-
-struct Userscore
-{
-    int score;
-    int name;
 };

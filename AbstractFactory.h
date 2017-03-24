@@ -13,7 +13,7 @@ public:
     virtual Player* getPlayer() = 0; // Maak abstract
     virtual Rocket* getRocket(int,int,int) = 0;
     virtual Enemy* getEnemy(int,int,int) = 0;
-    virtual Enum getEvent() = 0;
+    virtual Event getEvent() = 0;
     virtual void renderBackground() = 0;
     virtual void renderMenu(int) = 0;
     virtual void renderPaused() = 0;
