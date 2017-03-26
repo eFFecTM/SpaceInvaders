@@ -16,17 +16,20 @@ SDLFactory::SDLFactory()
     menuT = createTextureFromImage("resources/Menu.bmpx",&menuR);
     backgroundT = createTextureFromImage("resources/Background.bmpx",&backgroundR);
     pausedT = createTextureFromImage("resources/Paused.bmpx",&backgroundR); // Same size as background rect, so reusing it
+    gameOverT = createTextureFromImage("resources/GameOver.bmpx",&backgroundR);
 
-    font = TTF_OpenFont("resources/impact.ttf",32);
+    fontSmall = TTF_OpenFont("resources/Impact.ttf",32);
+    fontLarge = TTF_OpenFont("resources/Impact.ttf",96);
+    fontMonospace = TTF_OpenFont("resources/Joystix_Monospace.ttf",24);
 
-    menuOption1T = createTextureFromText("PLAY GAME",{255,255,255},&menuOption1R);
-    menuSelectedOption1T = createTextureFromText("PLAY GAME",{0,255,0},&menuOption1R);
+    menuOption1T = createTextureFromText(fontSmall,"PLAY GAME",{255,255,255},&menuOption1R);
+    menuSelectedOption1T = createTextureFromText(fontSmall,"PLAY GAME",{0,255,0},&menuOption1R);
 
-    menuOption2T = createTextureFromText("HIGHSCORES",{255,255,255},&menuOption2R);
-    menuSelectedOption2T = createTextureFromText("HIGHSCORES",{0,255,0},&menuOption2R);
+    menuOption2T = createTextureFromText(fontSmall,"HIGHSCORES",{255,255,255},&menuOption2R);
+    menuSelectedOption2T = createTextureFromText(fontSmall,"HIGHSCORES",{0,255,0},&menuOption2R);
 
-    menuOption3T = createTextureFromText("EXIT GAME",{255,255,255},&menuOption3R);
-    menuSelectedOption3T = createTextureFromText("EXIT GAME",{0,255,0},&menuOption3R);
+    menuOption3T = createTextureFromText(fontSmall,"EXIT GAME",{255,255,255},&menuOption3R);
+    menuSelectedOption3T = createTextureFromText(fontSmall,"EXIT GAME",{0,255,0},&menuOption3R);
 
     playerT = createTextureFromImage("resources/SpaceShip.bmpx",&playerR);
     rocket1T = createTextureFromImage("resources/Rocket1.bmpx",&rocket1R);
@@ -46,6 +49,18 @@ SDLFactory::SDLFactory()
 
     rocket2M = Mix_LoadWAV("resources/rocket2.wav");
     Mix_VolumeChunk(rocket2M,MIX_MAX_VOLUME/4);
+
+    highscoreLogoT = createTextureFromText(fontLarge,"HIGHSCORES",{255,140,0},&highscoreLogoR);
+    std::stringstream ss;
+    ss << "PLACE     NAME          SCORE";
+    scoreXT = createTextureFromText(fontMonospace,ss.str().c_str(),{255,255,255},&scoreXR);
+    ss.str("");
+    ss.clear();
+    ss << ".         ...           ...";
+    scoreEmptyT = createTextureFromText(fontMonospace,ss.str().c_str(),{255,255,255},&scoreEmptyR);
+
+    newHighscoreLogoT = createTextureFromText(fontLarge,"NEW HIGHSCORE!",{255,140,0},&newHighscoreLogoR);
+    newHighscoreInstrT = createTextureFromText(fontSmall,"Type your name here, then press enter:",{255,255,255},&newHighscoreInstrR);
 
     sdlRender = new SDLRender(renderer);
 }
@@ -73,9 +88,7 @@ Event SDLFactory::getEvent()
                 {
                     case SDL_SCANCODE_P:
                         if(!event.key.repeat)
-                        {
                             e = Pause;
-                        }
                         break;
                     case SDL_SCANCODE_UP:
                         e = MenuUp;
@@ -86,9 +99,22 @@ Event SDLFactory::getEvent()
                     case SDL_SCANCODE_RETURN:
                         e = MenuEnter;
                         break;
+                    case SDL_SCANCODE_BACKSPACE:
+                        if(inputText.length() > 0)
+                        {
+                            inputText.pop_back();
+                            renderNewInputText = true;
+                        }
+                        break;
                     default:
                         break;
                 }
+                break;
+            case SDL_TEXTINPUT:
+                inputText += event.text.text;
+                std::cout << inputText << std::endl;
+                renderNewInputText = true;
+                break;
             default:
                 break;
         }
@@ -124,7 +150,7 @@ SDL_Texture* SDLFactory::createTextureFromImage(std::string path, SDL_Rect* rect
     return texture;
 }
 
-SDL_Texture* SDLFactory::createTextureFromText(std::string text, SDL_Color color ,SDL_Rect* rect)
+SDL_Texture* SDLFactory::createTextureFromText(TTF_Font* font, std::string text, SDL_Color color ,SDL_Rect* rect)
 {
     SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(),color);
     SDL_GetClipRect(surface, rect);
@@ -176,7 +202,7 @@ void SDLFactory::renderScore(int score)
     SDL_DestroyTexture(scoreT);
     std::stringstream ss;
     ss << "Score: " << score;
-    scoreT = createTextureFromText(ss.str().c_str(),{255,255,255},&scoreR);
+    scoreT = createTextureFromText(fontSmall,ss.str().c_str(),{255,255,255},&scoreR);
     sdlRender->render(scoreT,scoreR);
 }
 
@@ -185,7 +211,7 @@ void SDLFactory::renderLives(int lives)
     SDL_DestroyTexture(livesT);
     std::stringstream ss;
     ss << "Lives left: " << lives;
-    livesT = createTextureFromText(ss.str().c_str(),{255,0,0},&livesR);
+    livesT = createTextureFromText(fontSmall,ss.str().c_str(),{255,0,0},&livesR);
     sdlRender->render(livesT,{800-livesR.w,0,livesR.w,livesR.h});
 }
 
@@ -196,6 +222,7 @@ void SDLFactory::renderPresent()
 
 SDLFactory::~SDLFactory()
 {
+    SDL_DestroyTexture(scoreXT);
     Mix_FreeChunk(rocket1M);
     Mix_FreeChunk(rocket2M);
     Mix_FreeMusic(music);
@@ -288,4 +315,64 @@ void SDLFactory::playSoundEffect(int type)
         Mix_PlayChannel(-1,rocket1M,0);
     else
         Mix_PlayChannel(-1,rocket2M,0);
+}
+
+void SDLFactory::makeHighscore(std::vector<Score>* highscore)
+{
+    std::stringstream ss;
+    std::string s;
+    for(unsigned int i=0; i<highscore->size(); i++)
+    {
+        SDL_DestroyTexture(scoreTextureList[i]);
+        Score score = highscore->at(i);
+        ss.str("");
+        ss.clear();
+        s.clear();
+        s.append(14-score.name.length(),' ');
+        ss << i+1 << "         " << score.name << s << score.score;
+        scoreTextureList[i] = createTextureFromText(fontMonospace,ss.str().c_str(),{255,255,255},&scoreRectList[i]);
+    }
+}
+
+void SDLFactory::renderHighscore(int size)
+{
+    sdlRender->render(highscoreLogoT,{400-highscoreLogoR.w/2,50,highscoreLogoR.w,highscoreLogoR.h});
+    sdlRender->render(scoreXT,{400-scoreXR.w/2,200,scoreXR.w,scoreXR.h});
+    for(int i=0; i<5; i++)
+        if(i < size)
+            sdlRender->render(scoreTextureList[i],{400-scoreXR.w/2,200+scoreXR.h*(i+1),scoreRectList[i].w,scoreRectList[i].h});
+        else
+            sdlRender->render(scoreEmptyT,{400-scoreXR.w/2,200+scoreXR.h*(i+1),scoreEmptyR.w,scoreEmptyR.h});
+
+}
+
+void SDLFactory::renderGameOver()
+{
+    sdlRender->render(gameOverT,backgroundR);
+}
+
+std::string SDLFactory::getInputText()
+{
+    SDL_StopTextInput();
+    return inputText;
+}
+
+void SDLFactory::enableTextInput()
+{
+    SDL_StartTextInput();
+}
+
+void SDLFactory::renderNewHighscore()
+{
+    sdlRender->render(newHighscoreLogoT,{400-newHighscoreLogoR.w/2,50,newHighscoreLogoR.w,newHighscoreLogoR.h});
+    sdlRender->render(newHighscoreInstrT,{400-newHighscoreInstrR.w/2,200,newHighscoreInstrR.w,newHighscoreInstrR.h});
+
+    if(renderNewInputText)
+    {
+        SDL_DestroyTexture(newInputTextT);
+        newInputTextT = createTextureFromText(fontMonospace,inputText,{255,0,0},&newInputTextR);
+    }
+
+    sdlRender->render(newInputTextT,{400-newHighscoreInstrR.w/2,200+newHighscoreInstrR.h,newInputTextR.w,newInputTextR.h});
+
 }

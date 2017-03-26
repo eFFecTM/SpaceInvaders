@@ -24,5 +24,12 @@ enum Mode
     Playing,
     Paused,
     Highscores,
+    GameOver,
     NewHighscore
+};
+
+struct Score
+{
+    std::string name;
+    int score;
 };

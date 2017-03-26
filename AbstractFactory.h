@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Enum.h"
+#include <vector>
 
 class AbstractFactory
 {
@@ -24,6 +25,12 @@ public:
     virtual int getTickDifference() = 0;
     virtual void addDelay(int) = 0;
     virtual void playSoundEffect(int) = 0;
+    virtual void makeHighscore(std::vector<Score>*) = 0;
+    virtual void renderHighscore(int) = 0;
+    virtual void renderGameOver() = 0;
+    virtual std::string getInputText() = 0;
+    virtual void enableTextInput() = 0;
+    virtual void renderNewHighscore() = 0;
 };
 
 #endif //SPACEINVADERS_ABSTRACTFACTORY_H

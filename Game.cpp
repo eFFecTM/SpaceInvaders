@@ -7,6 +7,8 @@ Game::Game(AbstractFactory* af)
 
 void Game::start()
 {
+    readHighscores();
+
     while(running)
     {
         af->startTimer();
@@ -27,9 +29,16 @@ void Game::start()
                 paused();
                 break;
             case Highscores:
-                //showHighscores();
+                af->renderHighscore(highscore.size());
+                break;
+            case GameOver:
+                af->renderGameOver();
+                break;
             case NewHighscore:
-                //addNewHighscore();
+                if(!inputText.empty())
+                    addNewHighscore();
+                af->renderNewHighscore();
+                break;
             default:
                 break;
         }
@@ -38,6 +47,8 @@ void Game::start()
         if (frameTicks < 1000 / 50) // Limiting framerate to 50 fps (60 has no round number)
             af->addDelay(1000 / 50 - frameTicks);
     }
+
+    writeHighscores();
 }
 
 void Game::checkDead()
@@ -62,9 +73,16 @@ void Game::checkDead()
         }
         enemies.clear();
 
-        //addNewHighscore()
+        if(*player->getScore() > highscore.back().score || highscore.size() != 5)
+        {
+            mode = NewHighscore;
+            af->enableTextInput();
+        }
+        else
+        {
+            mode = GameOver;
+        }
         delete player;
-        mode = Menu;
         isFirstPlaying = true;
     }
 }
@@ -139,6 +157,30 @@ void Game::paused()
     af->renderPaused();
 }
 
+void Game::addNewHighscore()
+{
+    bool hasInserted = false;
+    Score score = {inputText,*player->getScore()};
+    unsigned int size = highscore.size();
+    for(unsigned int i=0; i<size; i++)
+    {
+        if(*player->getScore() > highscore.at(i).score)
+        {
+            highscore.insert(highscore.begin()+i,score);
+            hasInserted = true;
+        }
+    }
+
+    if(!hasInserted)
+        highscore.at(size) = score;
+
+    if(size > 5)
+        highscore.pop_back();
+
+    inputText = "";
+    af->makeHighscore(&highscore);
+}
+
 bool Game::handleEvent(Event e)
 {
     bool running = true;
@@ -180,8 +222,6 @@ bool Game::handleEvent(Event e)
                 mode = Paused;
             else if(mode == Paused)
                 mode = Playing;
-            else if(mode == Highscores)
-                mode = Menu;
             break;
         }
         case MenuEnter:
@@ -202,6 +242,13 @@ bool Game::handleEvent(Event e)
                     default:
                         break;
                 }
+            }
+            else if(mode == Highscores || mode == GameOver)
+                mode = Menu;
+            else if(mode == NewHighscore)
+            {
+                inputText = af->getInputText();
+                mode = Highscores;
             }
             break;
         }
@@ -416,12 +463,40 @@ bool Game::hasIntersection(Entity* A, Entity* B)
     return true;
 }
 
-void Game::showHighscores()
+void Game::readHighscores()
 {
+    stringstream ss;
+    string s,part;
+    ifstream file("resources/Highscores.txt");
+    while(getline(file,s))
+    {
+        ss.clear();
+        ss.str(s);
+        Score score = Score();
+        int i=0;
+        while(getline(ss,part,';'))
+        {
+            if(i == 0)
+                score.name = part;
+            else
+                score.score = strtol(part.c_str(),nullptr,0);
+            i++;
+        }
+        highscore.push_back(score);
+    }
 
+    for(Score score : highscore)
+        cout << "Name: " << score.name << "  ; Score: " << score.score << endl;
+
+    file.close();
+
+    af->makeHighscore(&highscore);
 }
 
-void Game::addNewHighscore()
+void Game::writeHighscores()
 {
-
+    ofstream file("resources/Highscores.txt");
+    for(Score score : highscore)
+        file << score.name << ";" << score.score << endl;
+    file.close();
 }

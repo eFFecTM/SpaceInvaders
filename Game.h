@@ -4,6 +4,8 @@
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
+#include <fstream>
+#include <sstream>
 #include "AbstractFactory.h"
 
 using namespace std;
@@ -24,9 +26,10 @@ public:
     void menu();
     void playing();
     void paused();
-    void showHighscores();
     void addNewHighscore();
     void checkDead();
+    void readHighscores();
+    void writeHighscores();
 
 private:
     AbstractFactory *af;
@@ -41,8 +44,8 @@ private:
     bool isFirstPlaying = true, continuePlaying = false;
     int i=0;
     int selectedOption = 1;
-
-
+    vector<Score> highscore;
+    string inputText = "";
 };
 
 
