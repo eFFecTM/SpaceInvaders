@@ -5,15 +5,20 @@
 #include "SDLRender.h"
 #include <SDL.h>
 
-class SDLPlayer : public Player
+namespace NSSDL
 {
-public:
-    SDLPlayer(SDLRender*,SDL_Texture*,SDL_Rect*);
-    virtual ~SDLPlayer();
-    void render();
-private:
-    SDL_Texture* texture = NULL;
-    SDLRender* sdlRender = NULL;
-};
+    class SDLPlayer : public NSGame::Player
+    {
+    public:
+        SDLPlayer(SDLRender *, SDL_Texture *, SDL_Rect *);
 
+        virtual ~SDLPlayer();
+
+        void render();
+
+    private:
+        SDL_Texture *texture = NULL;
+        SDLRender *sdlRender = NULL;
+    };
+}
 #endif //SPACEINVADERS_SDLPLAYER_H

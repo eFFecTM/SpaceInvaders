@@ -3,14 +3,22 @@
 
 #include "Entity.h"
 
-class Enemy : public Entity
+namespace NSGame
 {
-public:
-    Enemy(){}
-    virtual ~Enemy(){}
-    virtual int* getType() = 0;
-protected:
-    int type;
-};
+    class Enemy : public Entity
+    {
+    public:
+        Enemy()
+        {}
+
+        virtual ~Enemy()
+        {}
+
+        virtual int *getType() = 0;
+
+    protected:
+        int type;
+    };
+}
 
 #endif //SPACEINVADERS_ENEMY_H

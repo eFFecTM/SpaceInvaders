@@ -3,18 +3,29 @@
 
 #include "Entity.h"
 
-class Player : public Entity
+namespace NSGame
 {
-public:
-    Player(){};
-    virtual ~Player(){}
-    int* getScore();
-    void setScore(int);
-    int* getLives();
-    void setLives(int);
-private:
-    int lives = 3;
-    int score = 0;
-};
+    class Player : public Entity
+    {
+    public:
+        Player()
+        {};
+
+        virtual ~Player()
+        {}
+
+        int *getScore();
+
+        void setScore(int);
+
+        int *getLives();
+
+        void setLives(int);
+
+    private:
+        int lives = 3;
+        int score = 0;
+    };
+}
 
 #endif //SPACEINVADERS_PLAYER_H

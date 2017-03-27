@@ -5,16 +5,23 @@
 #include "SDLRender.h"
 #include <SDL.h>
 
-class SDLEnemy : public Enemy
+namespace NSSDL
 {
-public:
-    SDLEnemy(SDLRender*,SDL_Texture*,SDL_Rect*,int);
-    virtual ~SDLEnemy();
-    int* getType();
-    void render();
-private:
-    SDL_Texture* texture = NULL;
-    SDLRender* sdlRender = NULL;
-};
+    class SDLEnemy : public NSGame::Enemy
+    {
+    public:
+        SDLEnemy(SDLRender *, SDL_Texture *, SDL_Rect *, int);
+
+        virtual ~SDLEnemy();
+
+        int *getType();
+
+        void render();
+
+    private:
+        SDL_Texture *texture = NULL;
+        SDLRender *sdlRender = NULL;
+    };
+}
 
 #endif //SPACEINVADERS_SDLENEMY_H

@@ -1,21 +1,24 @@
 #include "Player.h"
 
-int* Player::getScore()
+namespace NSGame
 {
-    return &score;
-}
+    int *Player::getScore()
+    {
+        return &score;
+    }
 
-void Player::setScore(int score)
-{
-    this->score = score;
-}
+    void Player::setScore(int score)
+    {
+        this->score = score;
+    }
 
-int* Player::getLives()
-{
-    return &lives;
-}
+    int *Player::getLives()
+    {
+        return &lives;
+    }
 
-void Player::setLives(int lives)
-{
-    this->lives = lives;
+    void Player::setLives(int lives)
+    {
+        this->lives = lives;
+    }
 }

@@ -1,45 +1,49 @@
 #include "Entity.h"
 
-Entity::Entity() {}
-
-int* Entity::getX()
+namespace NSGame
 {
-    return &x;
-}
+    Entity::Entity()
+    {}
 
-int* Entity::getY()
-{
-    return &y;
-}
+    int *Entity::getX()
+    {
+        return &x;
+    }
 
-int* Entity::getWidth()
-{
-    return &width;
-}
+    int *Entity::getY()
+    {
+        return &y;
+    }
 
-int* Entity::getHeight()
-{
-    return &height;
-}
+    int *Entity::getWidth()
+    {
+        return &width;
+    }
 
-void Entity::setX(int x)
-{
-    this -> x = x;
+    int *Entity::getHeight()
+    {
+        return &height;
+    }
 
-}
+    void Entity::setX(int x)
+    {
+        this->x = x;
 
-void Entity::setY(int y)
-{
-    this -> y = y;
-}
+    }
 
-void Entity::setWidth(int w)
-{
-    width = w;
+    void Entity::setY(int y)
+    {
+        this->y = y;
+    }
 
-}
+    void Entity::setWidth(int w)
+    {
+        width = w;
 
-void Entity::setHeight(int h)
-{
-    height = h;
+    }
+
+    void Entity::setHeight(int h)
+    {
+        height = h;
+    }
 }

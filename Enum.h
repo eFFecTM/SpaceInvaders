@@ -25,7 +25,8 @@ enum Mode
     Paused,
     Highscores,
     GameOver,
-    NewHighscore
+    NewHighscore,
+    Controls
 };
 
 struct Score

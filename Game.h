@@ -10,43 +10,44 @@
 
 using namespace std;
 
-class Game
+namespace NSGame
 {
-public:
-    Game(AbstractFactory*);
-    void start();
-    bool handleEvent(Event);
-    void shootPlayer();
-    void shootEnemies();
-    void movePlayer(Event);
-    void moveRockets();
-    void moveEnemies();
-    void collisionDetection();
-    bool hasIntersection(Entity*,Entity*);
-    void menu();
-    void playing();
-    void paused();
-    void addNewHighscore();
-    void checkDead();
-    void readHighscores();
-    void writeHighscores();
-
-private:
-    AbstractFactory *af;
-    Player *player;
-    bool running = true;
-    vector<Rocket*> playerRockets;
-    vector<Rocket*> enemyRockets;
-    vector<Enemy*> enemies;
-    int ls,rs,us,bs;
-    bool right = true;
-    Mode mode = Menu;
-    bool isFirstPlaying = true, continuePlaying = false;
-    int i=0;
-    int selectedOption = 1;
-    vector<Score> highscore;
-    string inputText = "";
-};
-
+    class Game
+    {
+    public:
+        Game(AbstractFactory *);
+        void start();
+        bool handleEvent(Event);
+        void shootPlayer();
+        void shootEnemies();
+        void movePlayer(Event);
+        void moveRockets();
+        void moveEnemies();
+        void collisionDetection();
+        bool hasIntersection(Entity *, Entity *);
+        void menu();
+        void playing();
+        void paused();
+        void addNewHighscore();
+        void checkDead();
+        void readHighscores();
+        void writeHighscores();
+    private:
+        AbstractFactory *af;
+        Player *player;
+        bool running = true;
+        vector<Rocket *> playerRockets;
+        vector<Rocket *> enemyRockets;
+        vector<Enemy *> enemies;
+        int ls, rs, us, bs;
+        bool right = true;
+        Mode mode = Menu;
+        bool isFirstPlaying = true, continuePlaying = false;
+        int i = 0, counterSpeed = 25;
+        int selectedOption = 1;
+        vector<Score> highscore;
+        string inputText = "";
+    };
+}
 
 #endif //SPACEINVADERS_GAME_H

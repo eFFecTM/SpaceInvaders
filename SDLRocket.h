@@ -7,16 +7,23 @@
 #include <sstream>
 #include <string>
 
-class SDLRocket : public Rocket
+namespace NSSDL
 {
-public:
-    SDLRocket(SDLRender*,SDL_Texture*,SDL_Rect*,int);
-    virtual ~SDLRocket();
-    int* getType();
-    void render();
-private:
-    SDL_Texture* texture = NULL;
-    SDLRender* sdlRender = NULL;
-};
+    class SDLRocket : public NSGame::Rocket
+    {
+    public:
+        SDLRocket(SDLRender *, SDL_Texture *, SDL_Rect *, int);
+
+        virtual ~SDLRocket();
+
+        int *getType();
+
+        void render();
+
+    private:
+        SDL_Texture *texture = NULL;
+        SDLRender *sdlRender = NULL;
+    };
+}
 
 #endif //SPACEINVADERS_SDLROCKET_H

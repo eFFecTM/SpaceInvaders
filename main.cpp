@@ -3,8 +3,8 @@
 
 int main(int argc, char** argv)
 {
-    AbstractFactory* F = new SDLFactory();
-    Game *game = new Game(F);
+    NSGame::AbstractFactory* F = new NSSDL::SDLFactory();
+    NSGame::Game *game = new NSGame::Game(F);
     game->start();
     return 0;
 }
