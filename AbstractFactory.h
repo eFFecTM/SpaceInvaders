@@ -36,6 +36,7 @@ namespace NSGame
         virtual std::string getInputText() = 0;
         virtual void enableTextInput() = 0;
         virtual void renderNewHighscore() = 0;
+        virtual void renderControls() = 0;
     };
 }
 #endif //SPACEINVADERS_ABSTRACTFACTORY_H

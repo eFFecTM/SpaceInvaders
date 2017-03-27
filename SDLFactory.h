@@ -37,12 +37,13 @@ namespace NSSDL
         std::string getInputText();
         void enableTextInput();
         void renderNewHighscore();
+        void renderControls();
     private:
         SDL_Window *window = NULL; // Good practice
         SDL_Renderer *renderer = NULL;
         SDL_Rect menuR, backgroundR, scoreR, livesR, currentHighscoreR, playerR, rocket1R, rocket2R, enemy1R, enemy2R, enemy3R, enemy4R;
         SDL_Rect scoreXR, scoreEmptyR, highscoreLogoR, newHighscoreLogoR, newHighscoreInstrR, newInputTextR;
-        SDL_Texture *menuT = NULL, *backgroundT = NULL, *scoreT = NULL, *livesT = NULL, *pausedT = NULL, *currentHighscoreT = NULL;
+        SDL_Texture *menuT = NULL, *backgroundT = NULL, *scoreT = NULL, *livesT = NULL, *pausedT = NULL, *currentHighscoreT = NULL, *controlsT = NULL;
         SDL_Texture *playerT = NULL, *rocket1T = NULL, *rocket2T = NULL, *enemy1T = NULL, *enemy2T = NULL, *enemy3T = NULL, *enemy4T = NULL;
         SDL_Texture *scoreXT = NULL, *scoreEmptyT = NULL, *highscoreLogoT = NULL, *gameOverT = NULL, *newHighscoreLogoT = NULL, *newInputTextT = NULL, *newHighscoreInstrT = NULL;
         TTF_Font *fontSmall = NULL, *fontLarge = NULL, *fontMonospace = NULL;

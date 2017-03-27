@@ -20,9 +20,9 @@ namespace NSSDL
 
         menuT = createTextureFromImage("resources/Menu.bmpx", &menuR);
         backgroundT = createTextureFromImage("resources/Background.bmpx", &backgroundR);
-        pausedT = createTextureFromImage("resources/Paused.bmpx",
-                                         &backgroundR); // Same size as background rect, so reusing it
+        pausedT = createTextureFromImage("resources/Paused.bmpx", &backgroundR); // Same size as background rect, so reusing it
         gameOverT = createTextureFromImage("resources/GameOver.bmpx", &backgroundR);
+        controlsT = createTextureFromImage("resources/Controls.bmpx",&backgroundR);
 
         fontSmall = TTF_OpenFont("resources/Impact.ttf", 32);
         fontLarge = TTF_OpenFont("resources/Impact.ttf", 96);
@@ -379,5 +379,10 @@ namespace NSSDL
         sdlRender->render(newInputTextT, {400 - newHighscoreInstrR.w / 2, 200 + newHighscoreInstrR.h, newInputTextR.w,
                                           newInputTextR.h});
 
+    }
+
+    void SDLFactory::renderControls()
+    {
+        sdlRender->render(controlsT,backgroundR);
     }
 }

@@ -39,6 +39,8 @@ namespace NSGame
                 case NewHighscore:
                     af->renderNewHighscore();
                     break;
+                case Controls:
+                    af->renderControls();
                 default:
                     break;
             }
@@ -263,7 +265,7 @@ namespace NSGame
                         player->setLives(0);
                         break;
                     case Controls:
-
+                        mode = Menu;
                         break;
                     default:
                         break;
