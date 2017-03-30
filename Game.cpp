@@ -130,7 +130,7 @@ namespace NSGame
         collisionDetection();
         af->renderScore(*player->getScore());
         af->renderLives(*player->getLives());
-        af->renderCurrentHighscore(highscore.back().score);
+        af->renderCurrentHighscore(highscore.front().score);
         player->render();
 
         for (Enemy *enemy : enemies)
