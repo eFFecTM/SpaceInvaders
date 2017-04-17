@@ -1,3 +1,8 @@
+/**
+ * AbstractFactory class: "Interface" for SDLFactory class
+ * Functionality of implemented classes: Making of entities (players, rockets or enemies), getting events from sdl, rendering parts of screen, sdl tick counting, sound effects/music and making/updating of highscore
+ */
+
 #ifndef SPACEINVADERS_ABSTRACTFACTORY_H
 #define SPACEINVADERS_ABSTRACTFACTORY_H
 
@@ -12,9 +17,8 @@ namespace NSGame
     class AbstractFactory
     {
     public:
-        AbstractFactory()
-        {};
-
+        AbstractFactory() {};
+        virtual ~AbstractFactory(){};
         virtual Player *getPlayer() = 0; // Maak abstract
         virtual Rocket *getRocket(int, int, int) = 0;
         virtual Enemy *getEnemy(int, int, int) = 0;

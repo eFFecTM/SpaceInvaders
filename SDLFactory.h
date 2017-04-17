@@ -1,3 +1,8 @@
+/**
+ * Header for SDLFactory class: More info at the abstractFactory header class
+ * Additionally it has 2 functions to create textures from scratch: From image and from Text
+ */
+
 #ifndef SPACEINVADERS_SDLFACTORY_H
 #define SPACEINVADERS_SDLFACTORY_H
 

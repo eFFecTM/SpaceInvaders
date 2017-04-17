@@ -1,3 +1,7 @@
+/**
+ * SDLEnemy class: More info at the header class
+ */
+
 #include "SDLEnemy.h"
 
 namespace NSSDL

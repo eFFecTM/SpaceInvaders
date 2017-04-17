@@ -1,3 +1,7 @@
+/**
+ * SDLRocket class: More info at the header class
+ */
+
 #include "SDLRocket.h"
 
 namespace NSSDL
@@ -16,11 +20,6 @@ namespace NSSDL
     SDLRocket::~SDLRocket()
     {
         std::cout << "Deleting Rocket" << std::endl;
-    }
-
-    int *SDLRocket::getType()
-    {
-        return &type;
     }
 
     void SDLRocket::render()

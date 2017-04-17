@@ -1,3 +1,8 @@
+/**
+ * Header for SDLRocket class
+ * Contains Texture of rocket, calls SDLRender function to render it
+ */
+
 #ifndef SPACEINVADERS_SDLROCKET_H
 #define SPACEINVADERS_SDLROCKET_H
 
@@ -13,13 +18,8 @@ namespace NSSDL
     {
     public:
         SDLRocket(SDLRender *, SDL_Texture *, SDL_Rect *, int);
-
         virtual ~SDLRocket();
-
-        int *getType();
-
         void render();
-
     private:
         SDL_Texture *texture = NULL;
         SDLRender *sdlRender = NULL;

@@ -1,3 +1,7 @@
+/**
+ * SDLPlayer class: More info at the header class
+ */
+
 #include "SDLPlayer.h"
 
 namespace NSSDL

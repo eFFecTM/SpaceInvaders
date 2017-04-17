@@ -1,9 +1,12 @@
+/**
+ * Entity class: More info at the header class
+ */
+
 #include "Entity.h"
 
 namespace NSGame
 {
-    Entity::Entity()
-    {}
+    Entity::Entity() {}
 
     int *Entity::getX()
     {

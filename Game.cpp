@@ -1,3 +1,7 @@
+/**
+ * Game class: Explanation for some functions available. More info at the header class
+ */
+
 #include "Game.h"
 
 namespace NSGame
@@ -7,6 +11,10 @@ namespace NSGame
         this->af = af;
     }
 
+    /**
+     * Game starts, only runs once, but stays in loop, makes sure everything gets
+     * rendered every game cycle, fps limiter used
+     */
     void Game::start()
     {
         readHighscores();
@@ -53,6 +61,9 @@ namespace NSGame
         writeHighscores();
     }
 
+    /**
+     * Checks if player is dead, if yes, clean up and reset
+     */
     void Game::checkDead()
     {
         if (*player->getLives() == 0)
@@ -90,11 +101,18 @@ namespace NSGame
         }
     }
 
+    /**
+     * In menu mode, it renders the menu screen
+     */
     void Game::menu()
     {
         af->renderMenu(selectedOption);
     }
 
+    /**
+     * In playing mode, it renders the playing screen
+     * After entering playing mode for the first time, the game spawns the enemies
+     */
     void Game::playing()
     {
         if (isFirstPlaying)
@@ -146,6 +164,10 @@ namespace NSGame
         }
     }
 
+    /**
+     * In paused mode, it renders the pause screen
+     * Only renders, without any updates to movement, etc.
+     */
     void Game::paused()
     {
         af->renderScore(*player->getScore());
@@ -162,6 +184,10 @@ namespace NSGame
         af->renderPaused();
     }
 
+    /**
+     * Gets called when a new highscore should be added to the list
+     * Makes sure names can't be longer than 5 characters
+     */
     void Game::addNewHighscore()
     {
         bool hasInserted = false;
@@ -184,6 +210,11 @@ namespace NSGame
         af->makeHighscore(&highscore);
     }
 
+    /**
+     * Event handler: Makes sure only specific events work in a certain mode
+     * @param Event e = Received event from factory
+     * @return bool running = Close event should be able to stop the game from running
+     */
     bool Game::handleEvent(Event e)
     {
         bool running = true;
@@ -286,6 +317,9 @@ namespace NSGame
         return running;
     }
 
+    /**
+     * A player shoots a rocket
+     */
     void Game::shootPlayer() // Player shoots
     {
         int x, y;
@@ -298,6 +332,9 @@ namespace NSGame
         }
     }
 
+    /**
+     * Enemies shoot a rocket (randomized)
+     */
     void Game::shootEnemies() // Enemies shoots (random)
     {
 
@@ -318,7 +355,7 @@ namespace NSGame
     {
         if (e == Left && *player->getX() > 0)
             player->setX(*player->getX() - 5);
-        else if (*player->getX() < 800 - *player->getWidth())
+        else if (e == Right && *player->getX() < 800 - *player->getWidth())
             player->setX(*player->getX() + 5);
     }
 
@@ -452,9 +489,11 @@ namespace NSGame
         }
     }
 
-// Algorithm from SDL library: SDL_rect.c (om gamecode in game te houden)
-// Source code available on https://www.libsdl.org/
-// A is enemy, B is rocket
+    /**
+     * Algorithm from SDL library: SDL_rect.c (om gamecode in game te houden)
+     * Source code available on https://www.libsdl.org/
+     * A is enemy, B is rocket
+     */
     bool Game::hasIntersection(Entity *A, Entity *B)
     {
         int Amin, Amax, Bmin, Bmax;

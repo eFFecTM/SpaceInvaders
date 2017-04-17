@@ -1,3 +1,7 @@
+/**
+ * Makes a factory and starts a game
+ */
+
 #include "Game.h"
 #include "SDLFactory.h"
 

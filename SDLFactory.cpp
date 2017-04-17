@@ -1,3 +1,7 @@
+/**
+ * SDLFactory class: More info at the header class
+ */
+
 #include <algorithm>
 #include "SDLFactory.h"
 #include "SDLPlayer.h"
@@ -43,7 +47,6 @@ namespace NSSDL
         enemy3T = createTextureFromImage("resources/Enemy3.bmpx", &enemy3R);
         enemy4T = createTextureFromImage("resources/Enemy4.bmpx", &enemy4R);
 
-//    music = Mix_LoadMUS("resources/Mass_Effect_Uncharted_Worlds.mp3");
         music = Mix_LoadMUS("resources/Icarus_8bit.mp3");
         Mix_VolumeMusic(MIX_MAX_VOLUME / 8);
         Mix_FadeInMusic(music, -1, 5000);
@@ -227,6 +230,9 @@ namespace NSSDL
         Mix_FreeChunk(rocket1M);
         Mix_FreeChunk(rocket2M);
         Mix_FreeMusic(music);
+        SDL_DestroyTexture(controlsT);
+        SDL_DestroyTexture(currentHighscoreT);
+        SDL_DestroyTexture(pausedT);
         SDL_DestroyTexture(livesT);
         SDL_DestroyTexture(scoreT);
         SDL_DestroyTexture(backgroundT);
@@ -238,9 +244,22 @@ namespace NSSDL
         SDL_DestroyTexture(enemy2T);
         SDL_DestroyTexture(enemy3T);
         SDL_DestroyTexture(enemy4T);
+        SDL_DestroyTexture(scoreXT);
+        SDL_DestroyTexture(scoreEmptyT);
+        SDL_DestroyTexture(highscoreLogoT);
+        SDL_DestroyTexture(gameOverT);
+        SDL_DestroyTexture(newHighscoreLogoT);
+        SDL_DestroyTexture(newInputTextT);
+        SDL_DestroyTexture(newHighscoreInstrT);
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
-
+        for(int i=0; i<4; i++)
+        {
+            SDL_DestroyTexture(menuOptionTextureList[i]);
+            SDL_DestroyTexture(menuSelectedOptionTextureList[i]);
+            SDL_DestroyTexture(scoreTextureList[i]);
+        }
+        SDL_DestroyTexture(scoreTextureList[5]);
         TTF_Quit();
         SDL_Quit();
     }
@@ -249,7 +268,6 @@ namespace NSSDL
     {
         playerR = {400, 600, playerR.w, playerR.h};
         return new SDLPlayer(sdlRender, playerT, &playerR);
-
     }
 
     NSGame::Rocket *SDLFactory::getRocket(int x, int y, int type)
@@ -340,7 +358,6 @@ namespace NSSDL
             else
                 sdlRender->render(scoreEmptyT,
                                   {400 - scoreXR.w / 2, 200 + scoreXR.h * (i + 1), scoreEmptyR.w, scoreEmptyR.h});
-
     }
 
     void SDLFactory::renderGameOver()
@@ -378,7 +395,6 @@ namespace NSSDL
 
         sdlRender->render(newInputTextT, {400 - newHighscoreInstrR.w / 2, 200 + newHighscoreInstrR.h, newInputTextR.w,
                                           newInputTextR.h});
-
     }
 
     void SDLFactory::renderControls()

@@ -1,3 +1,8 @@
+/**
+ * Contains a (game)Event and (game)Mode enumerator
+ * Also contains a struct Score for the scoreboard of the game
+ */
+
 #ifndef SPACEINVADERS_ENUM_H
 #define SPACEINVADERS_ENUM_H
 

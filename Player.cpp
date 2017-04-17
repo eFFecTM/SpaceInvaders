@@ -1,3 +1,7 @@
+/**
+ * Player class: More info at the header class
+ */
+
 #include "Player.h"
 
 namespace NSGame

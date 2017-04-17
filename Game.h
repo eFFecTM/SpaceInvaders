@@ -1,3 +1,10 @@
+/**
+ * Header for Game class
+ * Handles the game logic: players/enemies that shoot, movement of all entities,
+ * collisiondetection between entities, finite state machine in what mode the player is
+ * (menu, playing paused), separate dead player check and highscore management.
+ */
+
 #ifndef SPACEINVADERS_GAME_H
 #define SPACEINVADERS_GAME_H
 
@@ -16,6 +23,7 @@ namespace NSGame
     {
     public:
         Game(AbstractFactory *);
+        virtual ~Game(){};
         void start();
         bool handleEvent(Event);
         void shootPlayer();

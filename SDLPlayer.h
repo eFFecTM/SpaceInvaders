@@ -1,3 +1,8 @@
+/**
+ * Header for SDLPlayer class
+ * Contains Texture of player, calls SDLRender function to render it
+ */
+
 #ifndef SPACEINVADERS_SDLPLAYER_H
 #define SPACEINVADERS_SDLPLAYER_H
 
@@ -11,11 +16,8 @@ namespace NSSDL
     {
     public:
         SDLPlayer(SDLRender *, SDL_Texture *, SDL_Rect *);
-
         virtual ~SDLPlayer();
-
         void render();
-
     private:
         SDL_Texture *texture = NULL;
         SDLRender *sdlRender = NULL;

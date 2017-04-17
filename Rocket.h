@@ -1,3 +1,8 @@
+/**
+ * Header for Rocket class
+ * Contains type of rocket
+ */
+
 #ifndef SPACEINVADERS_ROCKET_H
 #define SPACEINVADERS_ROCKET_H
 
@@ -8,14 +13,8 @@ namespace NSGame
     class Rocket : public Player
     {
     public:
-        Rocket()
-        {}
-
-        virtual ~Rocket()
-        {}
-
-        virtual int *getType() = 0;
-
+        Rocket(){}
+        virtual ~Rocket(){}
     protected:
         int type;
     };

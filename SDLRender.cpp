@@ -1,3 +1,7 @@
+/**
+ * SDLRender class: More info at the header class
+ */
+
 #include "SDLRender.h"
 
 namespace NSSDL
