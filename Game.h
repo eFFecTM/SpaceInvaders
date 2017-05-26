@@ -52,7 +52,7 @@ namespace NSGame
         Mode mode = Menu;
         bool isFirstPlaying = true, continuePlaying = false;
         int i = 0, counterSpeed = 25;
-        int selectedOption = 1;
+        int selectedOption = 0;
         vector<Score> highscore;
         string inputText = "";
     };

@@ -86,15 +86,25 @@ namespace NSGame
             }
             enemies.clear();
 
-            if (*player->getScore() > highscore.back().score || highscore.size() < 5)
-            {
-                mode = NewHighscore;
-                af->enableTextInput();
-                cout << "Enabled!" << endl;
-            } else
-            {
+            if(*player->getScore() > 0)
+                if(!highscore.empty())
+                    if (*player->getScore() > highscore.back().score || highscore.size() < 5)
+                    {
+                        mode = NewHighscore;
+                        af->enableTextInput();
+                        cout << "Enabled!" << endl;
+                    } else
+                    {
+                        mode = GameOver;
+                    }
+                else
+                {
+                    mode = NewHighscore;
+                    af->enableTextInput();
+                    cout << "Enabled!" << endl;
+                }
+            else
                 mode = GameOver;
-            }
             delete player;
             isFirstPlaying = true;
             counterSpeed = 25;
@@ -148,7 +158,10 @@ namespace NSGame
         collisionDetection();
         af->renderScore(*player->getScore());
         af->renderLives(*player->getLives());
-        af->renderCurrentHighscore(highscore.front().score);
+        if(highscore.empty())
+            af->renderCurrentHighscore(0);
+        else
+            af->renderCurrentHighscore(highscore.front().score);
         player->render();
 
         for (Enemy *enemy : enemies)
