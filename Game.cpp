@@ -199,7 +199,7 @@ namespace NSGame
 
     /**
      * Gets called when a new highscore should be added to the list
-     * Makes sure names can't be longer than 5 characters
+     * Makes sure names can't be longer than 10 characters
      */
     void Game::addNewHighscore()
     {
