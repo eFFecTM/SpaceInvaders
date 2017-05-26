@@ -10,7 +10,7 @@
 
 namespace NSGame
 {
-    class Rocket : public Player
+    class Rocket : public Entity
     {
     public:
         Rocket(){}
