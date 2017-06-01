@@ -49,6 +49,7 @@ namespace NSGame
                     break;
                 case Controls:
                     af->renderControls();
+                    break;
                 default:
                     break;
             }
